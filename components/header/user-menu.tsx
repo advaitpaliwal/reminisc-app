@@ -35,7 +35,7 @@ export function UserMenu() {
   }, [signOut]);
 
   if (loading) {
-    return <Loader className="animate-spin" />;
+    return <Loader className="animate-spin mr-2" />;
   }
 
   if (!user) {

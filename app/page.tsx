@@ -1,24 +1,12 @@
 "use client";
 
 import {
-  Bird,
-  Book,
-  Bot,
-  Code2,
   CornerDownLeft,
   Edit,
-  LifeBuoy,
   Mic,
   Paperclip,
-  Rabbit,
   Settings,
-  Settings2,
-  Share,
-  SquareTerminal,
-  SquareUser,
   Trash,
-  Triangle,
-  Turtle,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -44,110 +32,29 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useState } from "react";
-import { LoginButton } from "@/components/auth/login-button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/header/theme-toggle";
 import ReminiscLogo from "@/components/header/logo";
 import { UserMenu } from "@/components/header/user-menu";
-import Link from "next/link";
-
-interface Memory {
-  id: string;
-  user_id: string;
-  created_at: string;
-  updated_at: string;
-  content: string;
-}
-
-const initialMemories: Memory[] = [
-  {
-    id: "1",
-    user_id: "user1",
-    created_at: "2023-05-21T10:00:00Z",
-    updated_at: "2023-05-21T10:00:00Z",
-    content: "Today I visited the beach and had a great time with my family.",
-  },
-  {
-    id: "2",
-    user_id: "user1",
-    created_at: "2023-05-20T15:30:00Z",
-    updated_at: "2023-05-20T15:30:00Z",
-    content:
-      "I attended a conference and learned about new technologies in my field.",
-  },
-  {
-    id: "3",
-    user_id: "user1",
-    created_at: "2023-05-19T09:15:00Z",
-    updated_at: "2023-05-19T09:15:00Z",
-    content: "I tried a new restaurant in town and the food was amazing!",
-  },
-  {
-    id: "4",
-    user_id: "user1",
-    created_at: "2023-05-18T18:45:00Z",
-    updated_at: "2023-05-18T18:45:00Z",
-    content:
-      "I went for a hike in the mountains and enjoyed the stunning views.",
-  },
-  {
-    id: "5",
-    user_id: "user1",
-    created_at: "2023-05-17T14:20:00Z",
-    updated_at: "2023-05-17T14:20:00Z",
-    content: "I had a great time catching up with an old friend over coffee.",
-  },
-  {
-    id: "6",
-    user_id: "user1",
-    created_at: "2023-05-16T11:10:00Z",
-    updated_at: "2023-05-16T11:10:00Z",
-    content: "I started reading a new book and I can't put it down!",
-  },
-  {
-    id: "7",
-    user_id: "user1",
-    created_at: "2023-05-15T20:00:00Z",
-    updated_at: "2023-05-15T20:00:00Z",
-    content:
-      "I watched a really interesting documentary about space exploration.",
-  },
-  {
-    id: "8",
-    user_id: "user1",
-    created_at: "2023-05-14T16:30:00Z",
-    updated_at: "2023-05-14T16:30:00Z",
-    content:
-      "I attended a workshop on photography and learned some new techniques.",
-  },
-  {
-    id: "9",
-    user_id: "user1",
-    created_at: "2023-05-13T08:45:00Z",
-    updated_at: "2023-05-13T08:45:00Z",
-    content: "I went to a local farmers market and bought some fresh produce.",
-  },
-  {
-    id: "10",
-    user_id: "user1",
-    created_at: "2023-05-12T19:15:00Z",
-    updated_at: "2023-05-12T19:15:00Z",
-    content: "I had a fun night out with friends at a new bar in town.",
-  },
-];
+import { Memory } from "@/types/memory";
+import { useMemoryStore } from "@/stores/memoryStore";
+import { useChat } from "ai/react";
 
 export default function Dashboard() {
-  const [memories, setMemories] = useState<Memory[]>(
-    initialMemories.sort((a, b) => (b.created_at > a.created_at ? 1 : -1))
-  );
-  const [newMemoryContent, setNewMemoryContent] = useState("");
-  const [editingMemoryId, setEditingMemoryId] = useState<string | null>(null);
-
+  const {
+    memories,
+    newMemoryContent,
+    editingMemoryId,
+    setNewMemoryContent,
+    createMemory,
+    deleteMemory,
+    editMemory,
+    setEditingMemoryId,
+  } = useMemoryStore();
   const handleCreateMemory = (e: React.FormEvent) => {
     e.preventDefault();
     if (newMemoryContent.trim() !== "") {
@@ -158,28 +65,25 @@ export default function Dashboard() {
         updated_at: new Date().toISOString(),
         content: newMemoryContent,
       };
-      setMemories([newMemory, ...memories]);
-      setNewMemoryContent("");
+      createMemory(newMemory);
     }
   };
 
-  const handleDeleteMemory = (memoryId: string) => {
-    setMemories(memories.filter((memory) => memory.id !== memoryId));
-  };
+  const {
+    messages,
+    input,
+    setInput,
+    handleInputChange,
+    handleSubmit,
+    isLoading: chatEndpointIsLoading,
+  } = useChat();
 
-  const handleEditMemory = (memoryId: string, updatedContent: string) => {
-    setMemories(
-      memories.map((memory) =>
-        memory.id === memoryId
-          ? {
-              ...memory,
-              content: updatedContent,
-              updated_at: new Date().toISOString(),
-            }
-          : memory
-      )
-    );
-    setEditingMemoryId(null);
+  const handleChatSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (chatEndpointIsLoading) {
+      return;
+    }
+    handleSubmit(e);
   };
 
   return (
@@ -238,7 +142,7 @@ export default function Dashboard() {
                         <form
                           onSubmit={(e) => {
                             e.preventDefault();
-                            handleEditMemory(
+                            editMemory(
                               memory.id,
                               e.currentTarget.content.value
                             );
@@ -272,7 +176,7 @@ export default function Dashboard() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => handleDeleteMemory(memory.id)}
+                            onClick={() => deleteMemory(memory.id)}
                           >
                             <Trash className="size-4" />
                             <span className="sr-only">Delete Memory</span>
@@ -333,7 +237,7 @@ export default function Dashboard() {
                         <form
                           onSubmit={(e) => {
                             e.preventDefault();
-                            handleEditMemory(
+                            editMemory(
                               memory.id,
                               e.currentTarget.content.value
                             );
@@ -365,7 +269,7 @@ export default function Dashboard() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => handleDeleteMemory(memory.id)}
+                            onClick={() => deleteMemory(memory.id)}
                           >
                             <Trash className="size-4" />
                             <span className="sr-only">Delete Memory</span>
@@ -380,14 +284,34 @@ export default function Dashboard() {
               </fieldset>
             </div>
           </div>
-          <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2">
-            <Badge variant="outline" className="absolute right-3 top-3">
-              Output
-            </Badge>
+          <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 ">
+            <ScrollArea className="max-h-[76vh] rounded-md p-1">
+              <div className="flex-1">
+                {messages.map((m) => (
+                  <div
+                    key={m.id}
+                    className={`mb-4 flex ${
+                      m.role === "user" ? "justify-end" : "justify-start"
+                    }`}
+                  >
+                    <div
+                      className={`rounded-lg px-4 py-2 ${
+                        m.role === "user"
+                          ? "bg-primary text-secondary"
+                          : "bg-none"
+                      }`}
+                    >
+                      {m.content}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
             <div className="flex-1" />
             <form
               className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
               x-chunk="dashboard-03-chunk-1"
+              onSubmit={handleChatSubmit}
             >
               <Label htmlFor="message" className="sr-only">
                 Message
@@ -396,6 +320,8 @@ export default function Dashboard() {
                 id="message"
                 placeholder="Type your message here..."
                 className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
+                value={input}
+                onChange={handleInputChange}
               />
               <div className="flex items-center p-3 pt-0">
                 <Tooltip>
@@ -416,8 +342,13 @@ export default function Dashboard() {
                   </TooltipTrigger>
                   <TooltipContent side="top">Use Microphone</TooltipContent>
                 </Tooltip>
-                <Button type="submit" size="sm" className="ml-auto gap-1.5">
-                  Send Message
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="ml-auto gap-1.5"
+                  disabled={chatEndpointIsLoading}
+                >
+                  {chatEndpointIsLoading ? "Loading..." : "Send Message"}
                   <CornerDownLeft className="size-3.5" />
                 </Button>
               </div>

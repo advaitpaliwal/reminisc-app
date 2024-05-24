@@ -9,7 +9,7 @@ import {
   Trash,
   NotebookPen,
 } from "lucide-react";
-
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -91,8 +91,11 @@ export default function Dashboard() {
     if (chatEndpointIsLoading) {
       return;
     }
-
+    if (input.trim() === "") {
+      return;
+    }
     try {
+      handleSubmit(e);
       const response = await fetch("/api/memory/process", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -104,7 +107,9 @@ export default function Dashboard() {
         console.log("Memory created:", data);
         if (data.content) {
           createMemory(data);
-          setNewCreatedMemory(data.content);
+          toast("📝 Memory updated", {
+            description: data.content,
+          });
         }
       } else {
         throw new Error("Failed to create memory");
@@ -112,8 +117,6 @@ export default function Dashboard() {
     } catch (error: any) {
       console.log("Error creating memory: " + error.message);
     }
-
-    handleSubmit(e);
   };
 
   return (
@@ -322,28 +325,6 @@ export default function Dashboard() {
               <div className="flex-1">
                 {messages.map((m) => (
                   <div key={m.id}>
-                    {m.role != "user" && (
-                      <div className="px-4 pt-2 flex justify-start">
-                        <Tooltip delayDuration={0}>
-                          <TooltipTrigger asChild>
-                            <div>
-                              <Badge className="bg-primary text-secondary cursor-pointer gap-1">
-                                <NotebookPen className="size-3" />
-                                Memory Updated
-                              </Badge>
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent
-                            className="flex justify-start"
-                            sideOffset={5}
-                          >
-                            <ScrollArea className="max-h-16 w-48 rounded-md">
-                              <p>{newCreatedMemory}</p>
-                            </ScrollArea>
-                          </TooltipContent>
-                        </Tooltip>
-                      </div>
-                    )}
                     <div
                       key={m.id}
                       className={`mb-4 flex ${
@@ -353,7 +334,7 @@ export default function Dashboard() {
                       <div
                         className={`rounded-lg px-4 py-2 ${
                           m.role === "user"
-                            ? "bg-primary text-secondary"
+                            ? "bg-[#f4f4f4] dark:text-primary dark:bg-[#2f2f2f]"
                             : "bg-none"
                         }`}
                       >

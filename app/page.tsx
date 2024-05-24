@@ -62,6 +62,7 @@ export default function Dashboard() {
     editMemory,
     setEditingMemoryId,
   } = useMemoryStore();
+  const [newCreatedMemory, setNewCreatedMemory] = useState("");
   const handleCreateMemory = (e: React.FormEvent) => {
     e.preventDefault();
     if (newMemoryContent.trim() !== "") {
@@ -85,11 +86,33 @@ export default function Dashboard() {
     isLoading: chatEndpointIsLoading,
   } = useChat();
 
-  const handleChatSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChatSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (chatEndpointIsLoading) {
       return;
     }
+
+    try {
+      const response = await fetch("/api/memory/process", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userInput: input }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Memory created:", data);
+        if (data.content) {
+          createMemory(data);
+          setNewCreatedMemory(data.content);
+        }
+      } else {
+        throw new Error("Failed to create memory");
+      }
+    } catch (error: any) {
+      console.log("Error creating memory: " + error.message);
+    }
+
     handleSubmit(e);
   };
 
@@ -314,12 +337,8 @@ export default function Dashboard() {
                             className="flex justify-start"
                             sideOffset={5}
                           >
-                            <ScrollArea className="h-16 w-48 rounded-md">
-                              <p>
-                                This is the memory. It can be a long text that
-                                doesnt fit in a single line. The scroll view
-                                will handle the overflow.
-                              </p>
+                            <ScrollArea className="max-h-16 w-48 rounded-md">
+                              <p>{newCreatedMemory}</p>
                             </ScrollArea>
                           </TooltipContent>
                         </Tooltip>

@@ -7,9 +7,11 @@ import {
   Paperclip,
   Settings,
   Trash,
+  NotebookPen,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -286,22 +288,39 @@ export default function Dashboard() {
           </div>
           <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 ">
             <ScrollArea className="max-h-[76vh] rounded-md p-1">
+              <Label htmlFor="Output" className="sr-only">
+                Output
+              </Label>
               <div className="flex-1">
                 {messages.map((m) => (
-                  <div
-                    key={m.id}
-                    className={`mb-4 flex ${
-                      m.role === "user" ? "justify-end" : "justify-start"
-                    }`}
-                  >
+                  <div key={m.id}>
+                    {m.role != "user" && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center mx-4 gap-1">
+                            <NotebookPen className="size-4" />
+                            <Label htmlFor="Memory Saved">Memory Updated</Label>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>User said hi</TooltipContent>
+                      </Tooltip>
+                    )}
+
                     <div
-                      className={`rounded-lg px-4 py-2 ${
-                        m.role === "user"
-                          ? "bg-primary text-secondary"
-                          : "bg-none"
+                      key={m.id}
+                      className={`mb-4 flex ${
+                        m.role === "user" ? "justify-end" : "justify-start"
                       }`}
                     >
-                      {m.content}
+                      <div
+                        className={`rounded-lg px-4 py-2 ${
+                          m.role === "user"
+                            ? "bg-primary text-secondary"
+                            : "bg-none"
+                        }`}
+                      >
+                        {m.content}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -309,7 +328,7 @@ export default function Dashboard() {
             </ScrollArea>
             <div className="flex-1" />
             <form
-              className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
+              className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring flex items-center"
               x-chunk="dashboard-03-chunk-1"
               onSubmit={handleChatSubmit}
             >
@@ -319,39 +338,18 @@ export default function Dashboard() {
               <Textarea
                 id="message"
                 placeholder="Type your message here..."
-                className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
+                className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0 flex-grow"
                 value={input}
                 onChange={handleInputChange}
               />
-              <div className="flex items-center p-3 pt-0">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <Paperclip className="size-4" />
-                      <span className="sr-only">Attach file</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top">Attach File</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <Mic className="size-4" />
-                      <span className="sr-only">Use Microphone</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top">Use Microphone</TooltipContent>
-                </Tooltip>
-                <Button
-                  type="submit"
-                  size="sm"
-                  className="ml-auto gap-1.5"
-                  disabled={chatEndpointIsLoading}
-                >
-                  {chatEndpointIsLoading ? "Loading..." : "Send Message"}
-                  <CornerDownLeft className="size-3.5" />
-                </Button>
-              </div>
+              <Button
+                type="submit"
+                size="icon"
+                className="m-2"
+                disabled={chatEndpointIsLoading}
+              >
+                <CornerDownLeft className="size-4" />
+              </Button>
             </form>
           </div>
         </main>

@@ -45,6 +45,11 @@ import { UserMenu } from "@/components/header/user-menu";
 import { Memory } from "@/types/memory";
 import { useMemoryStore } from "@/stores/memoryStore";
 import { useChat } from "ai/react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export default function Dashboard() {
   const {
@@ -90,7 +95,7 @@ export default function Dashboard() {
 
   return (
     <div className="grid h-screen w-full">
-      <div className="flex flex-col">
+      <div className="h-screen flex flex-col">
         <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
           <ReminiscLogo />
           <h1 className="text-xl font-medium font-serif">Reminisc</h1>
@@ -197,7 +202,7 @@ export default function Dashboard() {
           <ThemeToggle />
           <div />
         </header>
-        <main className="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3 ">
+        <main className="grid h-screen flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3 ">
           <div
             className="relative hidden flex-col items-start gap-8 md:flex "
             x-chunk="dashboard-03-chunk-0"
@@ -286,26 +291,15 @@ export default function Dashboard() {
               </fieldset>
             </div>
           </div>
-          <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 ">
-            <ScrollArea className="max-h-[76vh] rounded-md p-1">
+          <div className="box-border relative flex h-[100%] min-h-[50vh] flex-col rounded-xl bg-muted/50 lg:col-span-2 ">
+            <ScrollArea className="h-[100%] rounded-md  p-4">
               <Label htmlFor="Output" className="sr-only">
                 Output
               </Label>
               <div className="flex-1">
                 {messages.map((m) => (
                   <div key={m.id}>
-                    {m.role != "user" && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center mx-4 gap-1">
-                            <NotebookPen className="size-4" />
-                            <Label htmlFor="Memory Saved">Memory Updated</Label>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>User said hi</TooltipContent>
-                      </Tooltip>
-                    )}
-
+                    {m.role != "user" && <></>}
                     <div
                       key={m.id}
                       className={`mb-4 flex ${

@@ -3,20 +3,20 @@ import { createClient } from '@/utils/supabase/server'
 
 export const runtime = 'edge'
 
-const processInputUrl = `${process.env.REMINISC_BASE_API_URL}/v0/memory/process`
+const apiUrl = `${process.env.REMINISC_BASE_API_URL}/v0/memory`
 
-export async function POST(req: Request) {
+export async function PUT(req: Request) {
   const json = await req.json()
-  const { content } = json
+  const { memoryId, content } = json
 
   // const supabase = createClient()
   // const userResponse = await supabase.auth.getUser()
   // const userId = userResponse.data.user?.id
   const userId = 'advait'
-
+    
   console.log('Received POST request')
   console.log('User ID:', userId)
-  console.log('User input:', content)
+  console.log('User input:', memoryId, content)
 
   if (!userId) {
     console.log('Unauthorized request: No user ID found')
@@ -31,18 +31,18 @@ export async function POST(req: Request) {
 
   try {
     // Process input through Reminisc API
-    const response = await fetch(processInputUrl, {
-      method: 'POST',
+    const response = await fetch(`${apiUrl}/${memoryId}`, {
+      method: 'PUT',
       headers: headers,
       body: JSON.stringify({
-        content: content,
+        content,
         user_id: userId
       })
     })
 
     const responseJson = await response.json()
 
-    console.log('Processed response output:', responseJson)
+    console.log('Response output:', responseJson)
 
     return new Response(JSON.stringify(responseJson), {
       headers: { 'Content-Type': 'application/json' },

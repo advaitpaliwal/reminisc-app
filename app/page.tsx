@@ -1,17 +1,7 @@
 "use client";
 
-import {
-  CornerDownLeft,
-  Edit,
-  Mic,
-  Paperclip,
-  Settings,
-  Trash,
-  NotebookPen,
-} from "lucide-react";
+import { CornerDownLeft, Edit, Settings, Trash } from "lucide-react";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -21,21 +11,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -45,15 +23,11 @@ import { UserMenu } from "@/components/header/user-menu";
 import { Memory } from "@/types/memory";
 import { useMemoryStore } from "@/stores/memoryStore";
 import { useChat } from "ai/react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { useMemories } from "@/hooks/useMemories";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Dashboard() {
   const {
-    memories,
     newMemoryContent,
     editingMemoryId,
     setNewMemoryContent,
@@ -62,18 +36,13 @@ export default function Dashboard() {
     editMemory,
     setEditingMemoryId,
   } = useMemoryStore();
-  const [newCreatedMemory, setNewCreatedMemory] = useState("");
+
+  const { memories, isLoading: memoriesLoading } = useMemories();
+
   const handleCreateMemory = (e: React.FormEvent) => {
     e.preventDefault();
     if (newMemoryContent.trim() !== "") {
-      const newMemory: Memory = {
-        id: Date.now().toString(),
-        user_id: "user1",
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        content: newMemoryContent,
-      };
-      createMemory(newMemory);
+      createMemory(newMemoryContent);
     }
   };
 
@@ -99,7 +68,7 @@ export default function Dashboard() {
       const response = await fetch("/api/memory/process", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userInput: input }),
+        body: JSON.stringify({ content: input }),
       });
 
       if (response.ok) {
@@ -154,7 +123,7 @@ export default function Dashboard() {
                         value={newMemoryContent}
                         onChange={(e) => setNewMemoryContent(e.target.value)}
                         placeholder="Enter your memory..."
-                        className="min-h-[12rem] resize-none"
+                        className="min-h-[4rem] resize-none"
                       />
                     </div>
                     <Button type="submit">Create</Button>
@@ -169,6 +138,7 @@ export default function Dashboard() {
                       No memories found. Create your first one!
                     </p>
                   )}
+                  <Separator className="my-1" />
                   {memories.map((memory) => (
                     <div key={memory.id} className="grid gap-2">
                       {editingMemoryId === memory.id ? (
@@ -309,7 +279,6 @@ export default function Dashboard() {
                           </Button>
                         </div>
                       </div>
-
                       <Separator className="my-1" />
                     </div>
                   ))}

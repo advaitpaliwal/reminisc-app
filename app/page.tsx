@@ -291,15 +291,40 @@ export default function Dashboard() {
               </fieldset>
             </div>
           </div>
-          <div className="box-border relative flex h-[100%] min-h-[50vh] flex-col rounded-xl bg-muted/50 lg:col-span-2 ">
-            <ScrollArea className="h-[100%] rounded-md  p-4">
+          <div className="p-4 box-border relative flex h-[100%] min-h-[50vh] flex-col rounded-xl bg-muted/50 lg:col-span-2 ">
+            <ScrollArea className="h-[100%] rounded-md p-4">
               <Label htmlFor="Output" className="sr-only">
                 Output
               </Label>
               <div className="flex-1">
                 {messages.map((m) => (
                   <div key={m.id}>
-                    {m.role != "user" && <></>}
+                    {m.role != "user" && (
+                      <div className="px-4 pt-2 flex justify-start">
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger asChild>
+                            <div>
+                              <Badge className="bg-primary text-secondary cursor-pointer gap-1">
+                                <NotebookPen className="size-3" />
+                                Memory Updated
+                              </Badge>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className="flex justify-start"
+                            sideOffset={5}
+                          >
+                            <ScrollArea className="h-16 w-48 rounded-md">
+                              <p>
+                                This is the memory. It can be a long text that
+                                doesnt fit in a single line. The scroll view
+                                will handle the overflow.
+                              </p>
+                            </ScrollArea>
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    )}
                     <div
                       key={m.id}
                       className={`mb-4 flex ${

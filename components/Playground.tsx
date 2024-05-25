@@ -2,6 +2,7 @@
 
 import {
   CornerDownLeft,
+  DotIcon,
   Edit,
   EditIcon,
   NotebookPenIcon,
@@ -308,7 +309,7 @@ export const Playground = () => {
                 Output
               </Label>
               <div className="flex-1">
-                {messages.map((m) => (
+                {messages.map((m, index) => (
                   <div key={m.id}>
                     <div
                       key={m.id}
@@ -324,11 +325,15 @@ export const Playground = () => {
                         }`}
                       >
                         {m.content}
+                        {chatEndpointIsLoading &&
+                          m.role !== "user" &&
+                          index === messages.length - 1 && (
+                            <DotIcon className="inline-block animate-pulse size-8" />
+                          )}
                       </div>
                     </div>
                   </div>
                 ))}
-                {chatEndpointIsLoading && <TypingIndicator />}
               </div>
               {messages.length === 0 && (
                 <div className="flex items-center justify-center">

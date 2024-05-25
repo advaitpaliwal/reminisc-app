@@ -2,7 +2,6 @@
 
 import {
   CornerDownLeft,
-  DotIcon,
   Edit,
   EditIcon,
   NotebookPenIcon,
@@ -325,11 +324,6 @@ export const Playground = () => {
                         }`}
                       >
                         {m.content}
-                        {chatEndpointIsLoading &&
-                          m.role !== "user" &&
-                          index === messages.length - 1 && (
-                            <DotIcon className="inline-block animate-pulse size-8" />
-                          )}
                       </div>
                     </div>
                   </div>

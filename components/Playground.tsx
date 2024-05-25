@@ -134,7 +134,7 @@ export const Playground = () => {
     },
     {
       title: "Career",
-      description: "I am currently unemployed",
+      description: "I am building a startup",
     },
   ];
 
@@ -328,35 +328,36 @@ export const Playground = () => {
                     </div>
                   </div>
                 ))}
+                {chatEndpointIsLoading && <TypingIndicator />}
               </div>
-              {messages.length === 0 && (
-                <div className="flex items-center justify-center">
-                  <div className="grid grid-cols-3 gap-2">
-                    {exampleMessages.map((m) => (
-                      <Card
-                        key={m.title}
-                        className="w-full rounded-xl cursor-pointer"
-                        onClick={() => setInput(m.description)}
-                      >
-                        <CardHeader>
-                          <CardTitle>
-                            <span className="text-sm">{m.title}</span>
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <CardDescription>
-                            <span>{m.description}</span>
-                          </CardDescription>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
             </ScrollArea>
             <div className="flex-1" />
+            {messages.length === 0 && (
+              <div className="flex items-center justify-center">
+                <div className="grid grid-cols-3 gap-2">
+                  {exampleMessages.map((m) => (
+                    <Card
+                      key={m.title}
+                      className="w-full rounded-xl cursor-pointer"
+                      onClick={() => setInput(m.description)}
+                    >
+                      <CardHeader>
+                        <CardTitle>
+                          <span className="text-sm">{m.title}</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription>
+                          <span>{m.description}</span>
+                        </CardDescription>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
             <form
-              className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring flex items-center"
+              className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring flex items-center mt-10"
               x-chunk="dashboard-03-chunk-1"
               onSubmit={handleChatSubmit}
             >
@@ -366,7 +367,7 @@ export const Playground = () => {
               <Textarea
                 id="message"
                 placeholder="Type your message here..."
-                className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0 flex-grow"
+                className="min-h-12 resize-none border-0 p-4 shadow-none focus-visible:ring-0 flex-grow"
                 value={input}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyPress}

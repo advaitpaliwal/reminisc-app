@@ -32,6 +32,7 @@ import { useChat } from "ai/react";
 import { useMemories } from "@/hooks/useMemories";
 import { CreateMemoryForm } from "@/components/CreateMemoryForm";
 import { Memory } from "@/types/memory";
+import { TypingIndicator } from "./TypingIndicator";
 
 export const Playground = () => {
   const {
@@ -297,6 +298,7 @@ export const Playground = () => {
                     </div>
                   </div>
                 ))}
+                {chatEndpointIsLoading && <TypingIndicator />}
               </div>
             </ScrollArea>
             <div className="flex-1" />

@@ -55,7 +55,7 @@ export function SignupUserAuthForm({
               <Label htmlFor="first-name">First name</Label>
               <Input
                 id="first-name"
-                placeholder="Max"
+                placeholder="Advait"
                 required
                 {...register("firstName")}
               />
@@ -65,7 +65,7 @@ export function SignupUserAuthForm({
               <Label htmlFor="last-name">Last name</Label>
               <Input
                 id="last-name"
-                placeholder="Robinson"
+                placeholder="Paliwal"
                 required
                 {...register("lastName")}
               />
@@ -77,7 +77,7 @@ export function SignupUserAuthForm({
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder="advait@reminisc.ai"
               required
               {...register("email")}
             />

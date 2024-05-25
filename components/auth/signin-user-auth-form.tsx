@@ -56,7 +56,7 @@ export function SigninUserAuthForm({
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder="advait@reminisc.ai"
               required
               {...register("email")}
             />

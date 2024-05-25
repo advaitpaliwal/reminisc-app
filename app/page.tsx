@@ -155,7 +155,7 @@ export default function Dashboard() {
                           <Textarea
                             id="content"
                             defaultValue={memory.content}
-                            placeholder="Enter your memory..."
+                            placeholder="Enter a memory..."
                             className="min-h-[4rem] resize-none"
                           />
                           <Button type="submit">Save</Button>
@@ -233,7 +233,7 @@ export default function Dashboard() {
                           <Textarea
                             id="content"
                             defaultValue={memory.content}
-                            placeholder="Enter your memory..."
+                            placeholder="Enter a memory..."
                             className="min-h-[4rem] resize-none "
                           />
                           <Button type="submit">Save</Button>

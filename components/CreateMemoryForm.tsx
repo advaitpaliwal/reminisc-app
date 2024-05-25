@@ -36,7 +36,7 @@ export const CreateMemoryForm = () => {
             id="content"
             value={newMemoryContent}
             onChange={(e) => setNewMemoryContent(e.target.value)}
-            placeholder="Enter your memory..."
+            placeholder="Enter a memory..."
             className="min-h-[4rem] resize-none"
           />
         </div>

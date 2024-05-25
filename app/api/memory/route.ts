@@ -1,3 +1,4 @@
+import { createClient } from '@/utils/supabase/server';
 import 'server-only';
 
 export const runtime = 'edge';
@@ -6,10 +7,10 @@ const apiUrl = `${process.env.REMINISC_BASE_API_URL}/v0/memory`;
 
 export async function GET(req: Request) {
  
- // const supabase = createClient()
-  // const userResponse = await supabase.auth.getUser()
-  // const userId = userResponse.data.user?.id
-  const userId = 'advait'
+  const supabase = createClient()
+  const userResponse = await supabase.auth.getUser()
+  const userId = userResponse.data.user?.id
+
 
   if (!userId) {
     console.log('Unauthorized request: No user ID found')
@@ -51,10 +52,9 @@ export async function POST(req: Request) {
   const json = await req.json()
   const { content } = json
 
-  // const supabase = createClient()
-  // const userResponse = await supabase.auth.getUser()
-  // const userId = userResponse.data.user?.id
-  const userId = 'advait'
+  const supabase = createClient()
+  const userResponse = await supabase.auth.getUser()
+  const userId = userResponse.data.user?.id
 
 
   if (!userId) {
@@ -95,10 +95,9 @@ export async function PUT(req: Request) {
   const json = await req.json()
   const { memoryId, content } = json
 
-  // const supabase = createClient()
-  // const userResponse = await supabase.auth.getUser()
-  // const userId = userResponse.data.user?.id
-  const userId = 'advait'
+  const supabase = createClient()
+  const userResponse = await supabase.auth.getUser()
+  const userId = userResponse.data.user?.id
 
 
   if (!userId) {

@@ -38,16 +38,12 @@ export async function POST(req: NextRequest) {
     const messages = body.messages ?? [];
     const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage);
     const currentMessageContent = messages[messages.length - 1].content;
-
-    console.log("Received messages:", messages);
-    console.log("Formatted previous messages:", formattedPreviousMessages);
-    console.log("Current message content:", currentMessageContent);
-
-    // const supabase = createClient()
-    // const userResponse = await supabase.auth.getUser()
-    // const userId = userResponse.data.user?.id
-    const userId = 'advait'
-
+    const supabase = createClient()
+    const userResponse = await supabase.auth.getUser()
+    const userId = userResponse.data.user?.id
+    if (!userId) {
+      return new Response('Unauthorized', { status: 401 })
+    }
     const headers = {
       'Content-Type': 'application/json',
       'X-OPENAI-API-KEY': `${process.env.OPENAI_API_KEY}`,

@@ -9,14 +9,10 @@ export async function POST(req: Request) {
   const json = await req.json()
   const { content } = json
 
-  // const supabase = createClient()
-  // const userResponse = await supabase.auth.getUser()
-  // const userId = userResponse.data.user?.id
-  const userId = 'advait'
+  const supabase = createClient()
+  const userResponse = await supabase.auth.getUser()
+  const userId = userResponse.data.user?.id
 
-  console.log('Received POST request')
-  console.log('User ID:', userId)
-  console.log('User input:', content)
 
   if (!userId) {
     console.log('Unauthorized request: No user ID found')

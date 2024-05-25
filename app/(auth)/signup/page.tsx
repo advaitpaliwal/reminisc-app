@@ -40,6 +40,11 @@ export default function SignupPage({
 
     if (error) {
       console.log(error);
+      if (error.message === "User already registered") {
+        return redirect(
+          `/signup?message=${encodeURIComponent("User already registered")}`
+        );
+      }
       return redirect(
         `/signup?message=${encodeURIComponent("Could not authenticate user")}`
       );
@@ -71,6 +76,11 @@ export default function SignupPage({
             Sign in
           </Link>
         </div>
+        {searchParams.message && (
+          <span className="text-center text-sm text-red-600">
+            {decodeURIComponent(searchParams.message)}
+          </span>
+        )}
         <p className="px-8 text-center text-sm text-muted-foreground">
           By clicking continue, you agree to our{" "}
           <Link

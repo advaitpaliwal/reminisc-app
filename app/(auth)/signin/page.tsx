@@ -28,6 +28,18 @@ export default function SigninPage({
     });
 
     if (error) {
+      console.log(error.message);
+      if (error.message === "Email not confirmed") {
+        return redirect(
+          `/signin?message=${encodeURIComponent(
+            "Check email to continue sign in process"
+          )}`
+        );
+      } else if (error.message === "Invalid login credentials") {
+        return redirect(
+          `/signin?message=${encodeURIComponent("Invalid login credentials")}`
+        );
+      }
       return redirect(
         `/signin?message=${encodeURIComponent("Could not authenticate user")}`
       );
@@ -55,6 +67,11 @@ export default function SigninPage({
             Sign up
           </Link>
         </div>
+        {searchParams.message && (
+          <span className="text-center text-sm text-red-600">
+            {decodeURIComponent(searchParams.message)}
+          </span>
+        )}
       </div>
     </div>
   );

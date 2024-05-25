@@ -42,7 +42,7 @@ export function SignupUserAuthForm({
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
-    formAction(data);
+    await formAction(data);
     setIsLoading(false);
   };
 

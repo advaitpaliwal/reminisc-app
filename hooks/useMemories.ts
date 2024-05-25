@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useMemoryStore } from '@/stores/memoryStore';
+import { useMemoryStore } from "@/stores/useMemoryStore";
 
 export const useMemories = () => {
   const { memories, fetchMemories } = useMemoryStore();

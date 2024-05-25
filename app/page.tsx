@@ -5,7 +5,6 @@ import {
   Edit,
   EditIcon,
   NotebookPenIcon,
-  PencilIcon,
   Settings,
   Trash,
   TrashIcon,
@@ -23,24 +22,20 @@ import {
 import { Label } from "@/components/ui/label";
 
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/header/theme-toggle";
 import ReminiscLogo from "@/components/header/logo";
 import { UserMenu } from "@/components/header/user-menu";
-import { Memory } from "@/types/memory";
-import { useMemoryStore } from "@/stores/memoryStore";
+import { useMemoryStore } from "@/stores/useMemoryStore";
 import { useChat } from "ai/react";
 import { useMemories } from "@/hooks/useMemories";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CreateMemoryForm } from "@/components/CreateMemoryForm";
+import { Memory } from "@/types/memory";
 
 export default function Dashboard() {
   const {
-    newMemoryContent,
     editingMemoryId,
-    setNewMemoryContent,
-    createMemory,
     processMemory,
     deleteMemory,
     editMemory,
@@ -48,21 +43,6 @@ export default function Dashboard() {
   } = useMemoryStore();
 
   const { memories, isLoading: memoriesLoading } = useMemories();
-
-  const handleCreateMemory = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newMemoryContent.trim() !== "") {
-      const createdMemory = await createMemory(newMemoryContent);
-      if (createdMemory) {
-        toast.success("Memory created successfully.", {
-          icon: <PencilIcon />,
-          description: createdMemory.content,
-        });
-      } else {
-        toast.error("Failed to create memory.");
-      }
-    }
-  };
 
   const handleEditMemory = async (
     e: React.FormEvent,
@@ -148,26 +128,7 @@ export default function Dashboard() {
                 </DrawerDescription>
               </DrawerHeader>
               <div className="flex flex-col gap-6 overflow-auto p-4 pt-0">
-                <form
-                  onSubmit={handleCreateMemory}
-                  className="grid w-full items-start gap-6"
-                >
-                  <fieldset className="grid gap-6 rounded-lg border p-4">
-                    <legend className="-ml-1 px-1 text-sm font-medium">
-                      Create Memory
-                    </legend>
-                    <div className="grid gap-3">
-                      <Textarea
-                        id="content"
-                        value={newMemoryContent}
-                        onChange={(e) => setNewMemoryContent(e.target.value)}
-                        placeholder="Enter your memory..."
-                        className="min-h-[4rem] resize-none"
-                      />
-                    </div>
-                    <Button type="submit">Create</Button>
-                  </fieldset>
-                </form>
+                <CreateMemoryForm />
                 <fieldset className="grid gap-2 rounded-lg border p-4">
                   <legend className="-ml-1 px-1 text-sm font-medium">
                     Memories
@@ -178,7 +139,7 @@ export default function Dashboard() {
                     </p>
                   )}
                   <Separator className="my-1" />
-                  {memories.map((memory) => (
+                  {memories.map((memory: Memory) => (
                     <div key={memory.id} className="grid gap-2">
                       {editingMemoryId === memory.id ? (
                         <form
@@ -245,26 +206,7 @@ export default function Dashboard() {
             x-chunk="dashboard-03-chunk-0"
           >
             <div className="flex flex-col gap-6  w-full min-w-600px">
-              <form
-                onSubmit={handleCreateMemory}
-                className="grid w-full items-start gap-6"
-              >
-                <fieldset className="grid gap-6 rounded-lg border p-4 ">
-                  <legend className="-ml-1 px-1 text-sm font-medium">
-                    Create Memory
-                  </legend>
-                  <div className="grid gap-3">
-                    <Textarea
-                      id="content"
-                      value={newMemoryContent}
-                      onChange={(e) => setNewMemoryContent(e.target.value)}
-                      placeholder="Enter your memory..."
-                      className="min-h-12 resize-none"
-                    />
-                  </div>
-                  <Button type="submit">Create</Button>
-                </fieldset>
-              </form>
+              <CreateMemoryForm />
               <fieldset className="grid gap-2 rounded-lg border">
                 <legend className="-ml-1 px-1 text-sm font-medium">
                   Memories
@@ -275,7 +217,7 @@ export default function Dashboard() {
                       No memories found. Create your first one!
                     </p>
                   )}
-                  {memories.map((memory) => (
+                  {memories.map((memory: Memory) => (
                     <div key={memory.id} className="grid gap-2 p-2">
                       {editingMemoryId === memory.id ? (
                         <form

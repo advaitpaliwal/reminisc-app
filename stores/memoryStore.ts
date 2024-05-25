@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Memory } from '@/types/memory';
+import { parseISO, format } from 'date-fns';
 
 interface MemoryStore {
   memories: Memory[];
@@ -17,12 +18,20 @@ interface MemoryStore {
 
 const API_BASE_URL = '/api/memory';
 
+const formatTimestamps = (memories: Memory[]): Memory[] => {
+  return memories.map((memory) => ({
+    ...memory,
+    created_at: format(parseISO(memory.created_at), 'MM/dd/yy h:mm a'),
+    updated_at: format(parseISO(memory.updated_at), 'MM/dd/yy h:mm a'),
+  }));
+};
+
 export const useMemoryStore = create<MemoryStore>((set) => ({
   memories: [],
   newMemoryContent: '',
   editingMemoryId: null,
 
-  setMemories: (memories) => set({ memories }),
+  setMemories: (memories) => set({ memories: formatTimestamps(memories) }),
   setNewMemoryContent: (content) => set({ newMemoryContent: content }),
   setEditingMemoryId: (id) => set({ editingMemoryId: id }),
 
@@ -33,7 +42,7 @@ export const useMemoryStore = create<MemoryStore>((set) => ({
         throw new Error('Failed to fetch memories');
       }
       const data = await response.json();
-      set({ memories: data });
+      set({ memories: formatTimestamps(data) });
     } catch (error) {
       console.error('Error fetching memories:', error);
     }
@@ -50,11 +59,12 @@ export const useMemoryStore = create<MemoryStore>((set) => ({
         throw new Error('Failed to create memory');
       }
       const newMemory = await response.json();
+      const formattedMemory = formatTimestamps([newMemory])[0];
       set((state) => ({
-        memories: [newMemory, ...state.memories],
+        memories: [formattedMemory, ...state.memories],
         newMemoryContent: '',
       }));
-      return newMemory;
+      return formattedMemory;
     } catch (error) {
       console.error('Error creating memory:', error);
       return null;
@@ -94,13 +104,14 @@ export const useMemoryStore = create<MemoryStore>((set) => ({
         throw new Error('Failed to update memory');
       }
       const updatedMemory = await response.json();
+      const formattedMemory = formatTimestamps([updatedMemory])[0];
       set((state) => ({
         memories: state.memories.map((memory) =>
-          memory.id === memoryId ? updatedMemory : memory
+          memory.id === memoryId ? formattedMemory : memory
         ),
         editingMemoryId: null,
       }));
-      return updatedMemory;
+      return formattedMemory;
     } catch (error) {
       console.error('Error updating memory:', error);
       return null;
@@ -120,8 +131,9 @@ export const useMemoryStore = create<MemoryStore>((set) => ({
       const processedMemory = await response.json();
       console.log('Processed memory:', processedMemory);
       if (processedMemory.content) {
+        const formattedMemory = formatTimestamps([processedMemory])[0];
         set((state) => ({
-          memories: [processedMemory, ...state.memories],
+          memories: [formattedMemory, ...state.memories],
         }));
       }
       return processedMemory;

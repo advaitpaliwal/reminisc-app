@@ -82,6 +82,7 @@ export default function Dashboard() {
   };
 
   const handleDeleteMemory = async (memoryId: string, content: string) => {
+    console.log("Deleting memory with id: " + memoryId);
     const success = await deleteMemory(memoryId);
     if (success) {
       toast.success("Memory deleted successfully.", {
@@ -278,13 +279,13 @@ export default function Dashboard() {
                     <div key={memory.id} className="grid gap-2 p-2">
                       {editingMemoryId === memory.id ? (
                         <form
-                          onSubmit={(e) => {
-                            e.preventDefault();
-                            editMemory(
+                          onSubmit={(e) =>
+                            handleEditMemory(
+                              e,
                               memory.id,
                               e.currentTarget.content.value
-                            );
-                          }}
+                            )
+                          }
                           className="grid gap-2"
                         >
                           <Textarea
@@ -312,7 +313,9 @@ export default function Dashboard() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => deleteMemory(memory.id)}
+                            onClick={() =>
+                              handleDeleteMemory(memory.id, memory.content)
+                            }
                           >
                             <Trash className="size-4" />
                             <span className="sr-only">Delete Memory</span>

@@ -61,9 +61,7 @@ export async function POST(req: NextRequest) {
     })
 
     const searchJson = await searchResponse.json()
-    console.log('Search results:', searchJson)
     const relevantMemory = searchJson.map((memory: any) => memory.content).join(' ')
-    console.log('Relevant memory:', relevantMemory)
     
     const prompt = PromptTemplate.fromTemplate(TEMPLATE);
     const model = new ChatOpenAI({
@@ -73,7 +71,6 @@ export async function POST(req: NextRequest) {
     const outputParser = new HttpResponseOutputParser();
     const chain = prompt.pipe(model).pipe(outputParser);
     
-    console.log("Initialized chain with prompt, model, and output parser");
 
     const stream = await chain.stream({
       chat_history: formattedPreviousMessages.join("\n"),
@@ -81,7 +78,6 @@ export async function POST(req: NextRequest) {
       relevant_memory: relevantMemory,
     });
 
-    console.log("Streaming response");
 
     return new StreamingTextResponse(
       stream.pipeThrough(createStreamDataTransformer()),

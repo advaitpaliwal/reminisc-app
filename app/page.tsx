@@ -1,6 +1,15 @@
 "use client";
 
-import { CornerDownLeft, Edit, Settings, Trash } from "lucide-react";
+import {
+  CornerDownLeft,
+  Edit,
+  EditIcon,
+  NotebookPenIcon,
+  PencilIcon,
+  Settings,
+  Trash,
+  TrashIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +41,7 @@ export default function Dashboard() {
     editingMemoryId,
     setNewMemoryContent,
     createMemory,
+    processMemory,
     deleteMemory,
     editMemory,
     setEditingMemoryId,
@@ -39,10 +49,47 @@ export default function Dashboard() {
 
   const { memories, isLoading: memoriesLoading } = useMemories();
 
-  const handleCreateMemory = (e: React.FormEvent) => {
+  const handleCreateMemory = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newMemoryContent.trim() !== "") {
-      createMemory(newMemoryContent);
+      const createdMemory = await createMemory(newMemoryContent);
+      if (createdMemory) {
+        toast.success("Memory created successfully.", {
+          icon: <PencilIcon />,
+          description: createdMemory.content,
+        });
+      } else {
+        toast.error("Failed to create memory.");
+      }
+    }
+  };
+
+  const handleEditMemory = async (
+    e: React.FormEvent,
+    memoryId: string,
+    updatedContent: string
+  ) => {
+    e.preventDefault();
+    const updatedMemory = await editMemory(memoryId, updatedContent);
+    if (updatedMemory) {
+      toast.success("Memory updated successfully.", {
+        icon: <EditIcon />,
+        description: updatedMemory.content,
+      });
+    } else {
+      toast.error("Failed to update memory.");
+    }
+  };
+
+  const handleDeleteMemory = async (memoryId: string, content: string) => {
+    const success = await deleteMemory(memoryId);
+    if (success) {
+      toast.success("Memory deleted successfully.", {
+        icon: <TrashIcon />,
+        description: content,
+      });
+    } else {
+      toast.error("Failed to delete memory.");
     }
   };
 
@@ -65,23 +112,14 @@ export default function Dashboard() {
     }
     try {
       handleSubmit(e);
-      const response = await fetch("/api/memory/process", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: input }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Memory created:", data);
-        if (data.content) {
-          createMemory(data);
-          toast("📝 Memory updated", {
-            description: data.content,
-          });
-        }
+      const data = await processMemory(input);
+      if (data?.content) {
+        toast.success("Memory created", {
+          icon: <NotebookPenIcon />,
+          description: data.content,
+        });
       } else {
-        throw new Error("Failed to create memory");
+        throw new Error("Memory not created");
       }
     } catch (error: any) {
       console.log("Error creating memory: " + error.message);
@@ -143,13 +181,13 @@ export default function Dashboard() {
                     <div key={memory.id} className="grid gap-2">
                       {editingMemoryId === memory.id ? (
                         <form
-                          onSubmit={(e) => {
-                            e.preventDefault();
-                            editMemory(
+                          onSubmit={(e) =>
+                            handleEditMemory(
+                              e,
                               memory.id,
                               e.currentTarget.content.value
-                            );
-                          }}
+                            )
+                          }
                           className="grid gap-2"
                         >
                           <Textarea
@@ -179,7 +217,9 @@ export default function Dashboard() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => deleteMemory(memory.id)}
+                            onClick={() =>
+                              handleDeleteMemory(memory.id, memory.content)
+                            }
                           >
                             <Trash className="size-4" />
                             <span className="sr-only">Delete Memory</span>

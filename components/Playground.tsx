@@ -108,6 +108,13 @@ export const Playground = () => {
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleChatSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+    }
+  };
+
   return (
     <div className="grid h-screen w-full">
       <div className="h-screen flex flex-col">
@@ -316,6 +323,7 @@ export const Playground = () => {
                 className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0 flex-grow"
                 value={input}
                 onChange={handleInputChange}
+                onKeyDown={handleKeyPress}
               />
               <Button
                 type="submit"

@@ -33,6 +33,14 @@ import { useMemories } from "@/hooks/useMemories";
 import { CreateMemoryForm } from "@/components/CreateMemoryForm";
 import { Memory } from "@/types/memory";
 import { TypingIndicator } from "./TypingIndicator";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export const Playground = () => {
   const {
@@ -114,6 +122,21 @@ export const Playground = () => {
       handleChatSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
     }
   };
+
+  const exampleMessages = [
+    {
+      title: "Name",
+      description: "My name is Advait Paliwal",
+    },
+    {
+      title: "Hobby",
+      description: "I like to play the piano",
+    },
+    {
+      title: "Career",
+      description: "I am currently unemployed",
+    },
+  ];
 
   return (
     <div className="grid h-screen w-full">
@@ -279,7 +302,7 @@ export const Playground = () => {
               </fieldset>
             </div>
           </div>
-          <div className="p-4 box-border relative flex h-[100%] min-h-[50vh] flex-col rounded-xl bg-muted/50 lg:col-span-2 ">
+          <div className="p-4 box-border relative flex h-[100%] min-h-[50vh] flex-col rounded-xl bg-muted/50 lg:col-span-2">
             <ScrollArea className="h-[100%] rounded-md p-4">
               <Label htmlFor="Output" className="sr-only">
                 Output
@@ -307,6 +330,30 @@ export const Playground = () => {
                 ))}
                 {chatEndpointIsLoading && <TypingIndicator />}
               </div>
+              {messages.length === 0 && (
+                <div className="flex items-center justify-center">
+                  <div className="grid grid-cols-3 gap-2">
+                    {exampleMessages.map((m) => (
+                      <Card
+                        key={m.title}
+                        className="w-full rounded-xl cursor-pointer"
+                        onClick={() => setInput(m.description)}
+                      >
+                        <CardHeader>
+                          <CardTitle>
+                            <span className="text-sm">{m.title}</span>
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <CardDescription>
+                            <span>{m.description}</span>
+                          </CardDescription>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
             </ScrollArea>
             <div className="flex-1" />
             <form

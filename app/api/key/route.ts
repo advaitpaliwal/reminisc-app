@@ -21,7 +21,7 @@ export async function GET(req: Request) {
   };
 
   try {
-    const response = await fetch(apiUrl, {
+    const response = await fetch(`${apiUrl}/${userId}`, {
       method: 'GET',
       headers: headers,
     });
@@ -41,6 +41,7 @@ export async function GET(req: Request) {
     return new Response('Internal Server Error', { status: 500 });
   }
 }
+
 
 export async function POST(req: Request) {
   const json = await req.json();

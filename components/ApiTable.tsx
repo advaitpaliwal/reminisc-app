@@ -49,6 +49,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export function ApiKeysTable() {
   const [isMobile, setIsMobile] = useState(false);
@@ -82,6 +83,7 @@ export function ApiKeysTable() {
       name = getKeyName();
     }
     await createApiKey(name);
+    toast.success("API key created successfully.");
     setEditKeyName("");
     setCreateKeyDialogOpen(false);
     setShowSaveKeyDialog(true);
@@ -90,6 +92,7 @@ export function ApiKeysTable() {
   const handleCopy = (key: string) => {
     navigator.clipboard.writeText(key).then(() => {
       setCopiedKey(key);
+      toast.success("API key copied to clipboard.");
       setTimeout(() => setCopiedKey(null), 2000);
     });
   };
@@ -103,6 +106,7 @@ export function ApiKeysTable() {
   const handleDelete = async () => {
     if (keyToDelete) {
       await deleteApiKey(keyToDelete.id);
+      toast.success("API key revoked successfully.");
       setKeyToDelete(null);
     }
   };
@@ -114,6 +118,7 @@ export function ApiKeysTable() {
   const handleSaveEdit = async () => {
     if (currentEditKey) {
       await updateApiKey(currentEditKey.id, editKeyName);
+      toast.success("API key name updated successfully.");
       setEditKeyDialogOpen(false);
     }
   };

@@ -72,6 +72,7 @@ export function ApiKeysTable() {
   } = useApiKeys();
 
   const getKeyName = () => {
+    if (apiKeys.length === 0) return "Key 1";
     const keyNumber = apiKeys.length + 1;
     const name = `Key ${keyNumber}`;
     return name;

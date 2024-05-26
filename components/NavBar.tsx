@@ -8,7 +8,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { SquareTerminal, Code2, Book, Settings2 } from "lucide-react";
+import {
+  SquareTerminal,
+  Code2,
+  Book,
+  Settings2,
+  KeyRoundIcon,
+} from "lucide-react";
 import ReminiscLogo from "./header/logo";
 import React from "react";
 import { cn } from "@/lib/utils";
@@ -108,7 +114,7 @@ export const NavBar: React.FC<NavBarProps> = ({ className }) => {
                 })}
                 aria-label="API"
               >
-                <Code2 className="size-5" />
+                <KeyRoundIcon className="size-5" />
               </Button>
             </Link>
           </TooltipTrigger>

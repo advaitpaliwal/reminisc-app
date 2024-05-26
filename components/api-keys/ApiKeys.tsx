@@ -1,8 +1,8 @@
 "use client";
 
-import { NavBar } from "@/components/NavBar";
-import { Header } from "@/components/Header";
-import ApiKeysTable from "@/components/ApiTable";
+import { NavBar } from "@/components/nav/NavBar";
+import { Header } from "@/components/header/Header";
+import ApiKeysTable from "@/components/api-keys/ApiTable";
 
 export function ApiKeys() {
   return (

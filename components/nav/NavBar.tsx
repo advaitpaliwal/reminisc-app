@@ -8,14 +8,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  SquareTerminal,
-  Code2,
-  Book,
-  Settings2,
-  KeyRoundIcon,
-} from "lucide-react";
-import ReminiscLogo from "./header/logo";
+import { SquareTerminal, Book, KeyRoundIcon } from "lucide-react";
+import ReminiscLogo from "../header/logo";
 import React from "react";
 import { cn } from "@/lib/utils";
 

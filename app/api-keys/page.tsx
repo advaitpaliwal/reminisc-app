@@ -1,4 +1,4 @@
-import { ApiKeys } from "@/components/ApiKeys";
+import { ApiKeys } from "@/components/api-keys/ApiKeys";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 

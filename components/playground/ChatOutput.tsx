@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
-import { TypingIndicator } from "./TypingIndicator";
-import { ExampleMessages } from "./ExampleMessages";
+import { TypingIndicator } from "@/components/playground/TypingIndicator";
+import { ExampleMessages } from "@/components/playground/ExampleMessages";
 import { useChat } from "ai/react";
 import { CornerDownLeft, NotebookPenIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";

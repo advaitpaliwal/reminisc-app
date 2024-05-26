@@ -1,10 +1,10 @@
 "use client";
 
-import { CreateMemoryForm } from "@/components/CreateMemoryForm";
-import { Header } from "@/components/Header";
-import { MemoriesFieldset } from "@/components/MemoriesFieldset";
-import { ChatOutput } from "@/components/ChatOutput";
-import { NavBar } from "@/components/NavBar";
+import { CreateMemoryForm } from "@/components/playground/CreateMemoryForm";
+import { Header } from "@/components/header/Header";
+import { MemoriesFieldset } from "@/components/playground/MemoriesFieldset";
+import { ChatOutput } from "@/components/playground/ChatOutput";
+import { NavBar } from "@/components/nav/NavBar";
 
 export const Playground = () => {
   return (

@@ -6,8 +6,8 @@ import { useChat } from "ai/react";
 import { CornerDownLeft, NotebookPenIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useMemoryStore } from "@/stores/useMemoryStore";
 import { toast } from "sonner";
+import { useMemories } from "@/hooks/useMemories";
 
 export const ChatOutput = () => {
   const {
@@ -19,7 +19,7 @@ export const ChatOutput = () => {
     isLoading: chatEndpointIsLoading,
   } = useChat();
 
-  const { processMemory } = useMemoryStore();
+  const { processMemory } = useMemories();
 
   const handleChatSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

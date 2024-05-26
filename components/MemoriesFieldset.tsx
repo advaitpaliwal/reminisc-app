@@ -1,18 +1,19 @@
+// MemoriesFieldset.tsx
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Edit, Trash } from "lucide-react";
+import { useMemories } from "@/hooks/useMemories";
 import { useMemoryStore } from "@/stores/useMemoryStore";
 
 export const MemoriesFieldset: React.FC = () => {
-  const {
-    memories,
-    editingMemoryId,
-    editMemory,
-    deleteMemory,
-    setEditingMemoryId,
-  } = useMemoryStore();
+  const { memories, isLoading, error, editMemory, deleteMemory } =
+    useMemories();
+  const editingMemoryId = useMemoryStore((state) => state.editingMemoryId);
+  const setEditingMemoryId = useMemoryStore(
+    (state) => state.setEditingMemoryId
+  );
 
   const handleEditMemory = async (
     e: React.FormEvent,
@@ -21,9 +22,10 @@ export const MemoriesFieldset: React.FC = () => {
   ) => {
     e.preventDefault();
     await editMemory(memoryId, updatedContent);
+    setEditingMemoryId(null);
   };
 
-  const handleDeleteMemory = async (memoryId: string, content: string) => {
+  const handleDeleteMemory = async (memoryId: string) => {
     await deleteMemory(memoryId);
   };
 
@@ -49,7 +51,7 @@ export const MemoriesFieldset: React.FC = () => {
                   id="content"
                   defaultValue={memory.content}
                   placeholder="Enter a memory..."
-                  className="min-h-[4rem] resize-none "
+                  className="min-h-[4rem] resize-none"
                 />
                 <Button type="submit">Save</Button>
               </form>
@@ -70,7 +72,7 @@ export const MemoriesFieldset: React.FC = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => handleDeleteMemory(memory.id, memory.content)}
+                  onClick={() => handleDeleteMemory(memory.id)}
                 >
                   <Trash className="size-4" />
                   <span className="sr-only">Delete Memory</span>

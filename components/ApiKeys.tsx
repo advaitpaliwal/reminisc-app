@@ -1,6 +1,6 @@
 "use client";
 
-import { NavBar } from "@/components/Nav";
+import { NavBar } from "@/components/NavBar";
 import { Header } from "@/components/Header";
 import ApiKeysTable from "@/components/ApiTable";
 

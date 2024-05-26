@@ -9,12 +9,7 @@ import {
   Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -27,8 +22,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -43,62 +36,53 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-interface ApiKey {
-  name: string;
-  secretKey: string;
-  created: string;
-  lastUsed: string;
-}
-
-const initialApiKeys: ApiKey[] = [
-  {
-    name: "devEnvironment",
-    secretKey: "rem-abcdefghijklmnopqrstuvwxyz0Eht",
-    created: "May 1, 2024",
-    lastUsed: "May 25, 2024",
-  },
-  {
-    name: "productionKey",
-    secretKey: "rem-abcdefghijklmnopqrstuvwxyzGZFW",
-    created: "May 1, 2024",
-    lastUsed: "May 25, 2024",
-  },
-];
-
-const generateRandomKey = (): string => {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "rem-";
-  for (let i = 0; i < 32; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-};
+import useApiKeys from "@/hooks/useApiKeys";
+import { ApiKey } from "@/types/apiKey";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export function ApiKeysTable() {
   const [isMobile, setIsMobile] = useState(false);
   const [showSaveKeyDialog, setShowSaveKeyDialog] = useState(false);
-  const [newKey, setNewKey] = useState("");
   const [createKeyDialogOpen, setCreateKeyDialogOpen] = useState(false);
-  const [apiKeys, setApiKeys] = useState<ApiKey[]>(initialApiKeys);
   const [editKeyDialogOpen, setEditKeyDialogOpen] = useState(false);
   const [currentEditKey, setCurrentEditKey] = useState<ApiKey | null>(null);
   const [editKeyName, setEditKeyName] = useState("");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [keyToDelete, setKeyToDelete] = useState<ApiKey | null>(null);
 
-  const handleSubmit = () => {
-    const generatedKey = generateRandomKey();
-    setApiKeys([
-      ...apiKeys,
-      {
-        name: "NewKey",
-        secretKey: generatedKey,
-        created: new Date().toDateString(),
-        lastUsed: new Date().toDateString(),
-      },
-    ]);
-    setNewKey(generatedKey);
+  const {
+    apiKeys,
+    loading,
+    error,
+    newKey,
+    createApiKey,
+    updateApiKey,
+    deleteApiKey,
+  } = useApiKeys();
+
+  const getKeyName = () => {
+    const keyNumber = apiKeys.length + 1;
+    const name = `Key ${keyNumber}`;
+    return name;
+  };
+
+  const handleSubmit = async () => {
+    let name = editKeyName.trim();
+    if (!name) {
+      name = getKeyName();
+    }
+    await createApiKey(name);
+    setEditKeyName("");
     setCreateKeyDialogOpen(false);
     setShowSaveKeyDialog(true);
   };
@@ -116,17 +100,22 @@ export function ApiKeysTable() {
     setEditKeyDialogOpen(true);
   };
 
-  const handleDelete = (keyToDelete: ApiKey) => {
-    setApiKeys(apiKeys.filter((key) => key !== keyToDelete));
+  const handleDelete = async () => {
+    if (keyToDelete) {
+      await deleteApiKey(keyToDelete.id);
+      setKeyToDelete(null);
+    }
   };
 
-  const handleSaveEdit = () => {
-    setApiKeys(
-      apiKeys.map((key) =>
-        key === currentEditKey ? { ...key, name: editKeyName } : key
-      )
-    );
-    setEditKeyDialogOpen(false);
+  const confirmDelete = (key: ApiKey) => {
+    setKeyToDelete(key);
+  };
+
+  const handleSaveEdit = async () => {
+    if (currentEditKey) {
+      await updateApiKey(currentEditKey.id, editKeyName);
+      setEditKeyDialogOpen(false);
+    }
   };
 
   useEffect(() => {
@@ -176,8 +165,10 @@ export function ApiKeysTable() {
                   </Label>
                   <Input
                     id="key-name"
-                    placeholder="My Test Key"
+                    placeholder={getKeyName()}
                     className="col-span-3"
+                    value={editKeyName}
+                    onChange={(e) => setEditKeyName(e.target.value)}
                   />
                 </div>
               </div>
@@ -190,61 +181,66 @@ export function ApiKeysTable() {
           </Dialog>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>NAME</TableHead>
-                <TableHead>API KEY</TableHead>
-                {!isMobile && <TableHead>CREATED</TableHead>}
-                {!isMobile && <TableHead>LAST USED</TableHead>}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {apiKeys.map((key, index) => (
-                <TableRow key={index}>
-                  <TableCell>{formatName(key.name)}</TableCell>
-                  <TableCell>{formatKey(key.secretKey)}</TableCell>
-                  {!isMobile && <TableCell>{key.created}</TableCell>}
-                  {!isMobile && <TableCell>{key.lastUsed}</TableCell>}
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="size-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem
-                          onClick={() => handleCopy(key.secretKey)}
-                        >
-                          {copiedKey === key.secretKey ? (
-                            <Check className="mr-2 size-4" />
-                          ) : (
-                            <Copy className="mr-2 size-4" />
-                          )}
-                          {copiedKey === key.secretKey ? "Copied" : "Copy"}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleEdit(key)}>
-                          <Edit className="mr-2 size-4" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleDelete(key)}>
-                          <Trash className="mr-2 size-4" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+      {apiKeys.length > 0 && (
+        <CardContent>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>NAME</TableHead>
+                  <TableHead>API KEY</TableHead>
+                  {!isMobile && <TableHead>CREATED</TableHead>}
+                  {!isMobile && <TableHead>LAST USED</TableHead>}
+                  <TableHead></TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
+              </TableHeader>
+              <TableBody>
+                {apiKeys.map((key: ApiKey) => (
+                  <TableRow key={key.id}>
+                    <TableCell>{formatName(key.name)}</TableCell>
+                    <TableCell>{formatKey(key.secret_key)}</TableCell>
+                    {!isMobile && <TableCell>{key.created_at}</TableCell>}
+                    {!isMobile && (
+                      <TableCell>{key.last_used_at || "Unused"}</TableCell>
+                    )}
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="size-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem
+                            onClick={() => handleCopy(key.secret_key)}
+                          >
+                            {copiedKey === key.secret_key ? (
+                              <Check className="mr-2 size-4" />
+                            ) : (
+                              <Copy className="mr-2 size-4" />
+                            )}
+                            {copiedKey === key.secret_key ? "Copied" : "Copy"}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleEdit(key)}>
+                            <Edit className="mr-2 size-4" />
+                            Edit Name
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => confirmDelete(key)}>
+                            <Trash className="mr-2 size-4" />
+                            Revoke
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      )}
 
-      {showSaveKeyDialog && (
+      {showSaveKeyDialog && newKey && (
         <Dialog open={showSaveKeyDialog} onOpenChange={setShowSaveKeyDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -252,8 +248,7 @@ export function ApiKeysTable() {
               <DialogDescription>
                 Please save this secret key somewhere safe and accessible. For
                 security reasons, you won&apos;t be able to view it again
-                through your account. If you lose this secret key, you&apos;ll
-                need to generate a new one.
+                through your account.
               </DialogDescription>
             </DialogHeader>
             <div className="flex items-center space-x-2">
@@ -317,6 +312,43 @@ export function ApiKeysTable() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+      )}
+
+      {keyToDelete && (
+        <AlertDialog
+          open={keyToDelete !== null}
+          onOpenChange={() => setKeyToDelete(null)}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Revoke secret key</AlertDialogTitle>
+              <AlertDialogDescription>
+                This API key will immediately be disabled. API requests made
+                using this key will be rejected, which could cause any systems
+                still depending on it to break. Once revoked, you&apos;ll no
+                longer be able to view or modify this API key.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="flex items-center space-x-2">
+              <div className="grid flex-1 gap-2">
+                <Label htmlFor="delete-key" className="sr-only">
+                  Secret Key
+                </Label>
+                <Input
+                  id="delete-key"
+                  value={formatKey(keyToDelete.secret_key)}
+                  readOnly
+                />
+              </div>
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete}>
+                Revoke key
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
     </Card>
   );

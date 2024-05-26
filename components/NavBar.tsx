@@ -36,7 +36,7 @@ export const NavBar: React.FC<NavBarProps> = ({ className }) => {
           className
         )}
       >
-        <div className="border-b p-2">
+        <div className="p-2">
           <Button variant="outline" size="icon" aria-label="Home" disabled>
             <div className="h-6 w-6 animate-pulse rounded-full bg-muted" />
           </Button>
@@ -65,9 +65,14 @@ export const NavBar: React.FC<NavBarProps> = ({ className }) => {
         className
       )}
     >
-      <div className="border-b p-2">
+      <div className="p-2">
         <Link href="/">
-          <Button variant="outline" size="icon" aria-label="Home">
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label="Home"
+            className="rounded-lg"
+          >
             <ReminiscLogo />
           </Button>
         </Link>

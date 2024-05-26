@@ -4,7 +4,7 @@ import { CreateMemoryForm } from "@/components/CreateMemoryForm";
 import { Header } from "@/components/Header";
 import { MemoriesFieldset } from "@/components/MemoriesFieldset";
 import { ChatOutput } from "@/components/ChatOutput";
-import { NavBar } from "./Nav";
+import { NavBar } from "@/components/NavBar";
 
 export const Playground = () => {
   return (

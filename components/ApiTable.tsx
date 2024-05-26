@@ -147,6 +147,7 @@ export function ApiKeysTable() {
   };
 
   const formatName = (name: string) => {
+    if (name.length <= 7) return name;
     return `${name.slice(0, 7)}...`;
   };
 

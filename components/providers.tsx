@@ -10,13 +10,7 @@ export function Providers({ children, ...props }: ThemeProviderProps) {
   return (
     <NextThemesProvider {...props}>
       <TooltipProvider>{children}</TooltipProvider>
-      <Toaster
-        expand={false}
-        position="top-center"
-        toastOptions={{
-          className: "flex flex-row gap-4",
-        }}
-      />
+      <Toaster expand={false} position="top-center" />
     </NextThemesProvider>
   );
 }

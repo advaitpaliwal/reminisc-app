@@ -15,7 +15,6 @@ export const CreateMemoryForm = () => {
       const createdMemory = await createMemory(newMemoryContent);
       if (createdMemory) {
         toast.success("Memory created successfully.", {
-          icon: <PencilIcon />,
           description: createdMemory.content,
         });
         setNewMemoryContent("");

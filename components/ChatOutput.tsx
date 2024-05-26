@@ -33,12 +33,11 @@ export const ChatOutput = () => {
       handleSubmit(e);
       const data = await processMemory(input);
       if (data?.content) {
-        toast.success("Memory created", {
+        toast.success("Memory updated", {
           icon: <NotebookPenIcon />,
           description: data.content,
+          className: "flex flex-row gap-4",
         });
-      } else {
-        throw new Error("Memory not created");
       }
     } catch (error: any) {
       console.log("Error creating memory: " + error.message);

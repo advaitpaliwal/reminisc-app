@@ -3,9 +3,11 @@ import { Label } from "@/components/ui/label";
 import { TypingIndicator } from "./TypingIndicator";
 import { ExampleMessages } from "./ExampleMessages";
 import { useChat } from "ai/react";
-import { CornerDownLeft } from "lucide-react";
+import { CornerDownLeft, NotebookPenIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useMemoryStore } from "@/stores/useMemoryStore";
+import { toast } from "sonner";
 
 export const ChatOutput = () => {
   const {
@@ -17,10 +19,36 @@ export const ChatOutput = () => {
     isLoading: chatEndpointIsLoading,
   } = useChat();
 
+  const { processMemory } = useMemoryStore();
+
+  const handleChatSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (chatEndpointIsLoading) {
+      return;
+    }
+    if (input.trim() === "") {
+      return;
+    }
+    try {
+      handleSubmit(e);
+      const data = await processMemory(input);
+      if (data?.content) {
+        toast.success("Memory created", {
+          icon: <NotebookPenIcon />,
+          description: data.content,
+        });
+      } else {
+        throw new Error("Memory not created");
+      }
+    } catch (error: any) {
+      console.log("Error creating memory: " + error.message);
+    }
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+      handleChatSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
     }
   };
 
@@ -61,9 +89,9 @@ export const ChatOutput = () => {
         />
       )}
       <form
-        className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring flex items-center mt-10"
+        className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring flex items-center"
         x-chunk="dashboard-03-chunk-1"
-        onSubmit={handleSubmit}
+        onSubmit={handleChatSubmit}
       >
         <Label htmlFor="message" className="sr-only">
           Message

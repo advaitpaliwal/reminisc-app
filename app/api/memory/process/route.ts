@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     return new Response('Unauthorized', { status: 401 })
   }
 
+
   const headers = {
     'Content-Type': 'application/json',
     'X-OPENAI-API-KEY': `${process.env.OPENAI_API_KEY}`,

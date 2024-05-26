@@ -17,7 +17,6 @@ export async function GET(req: Request) {
     return new Response('Unauthorized', { status: 401 })
   }
 
-
   const headers = {
     'Content-Type': 'application/json',
     'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
@@ -61,6 +60,7 @@ export async function POST(req: Request) {
     console.log('Unauthorized request: No user ID found')
     return new Response('Unauthorized', { status: 401 })
   }
+
 
   const headers = {
     'Content-Type': 'application/json',
@@ -135,10 +135,9 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   const json = await req.json()
   const { memoryId } = json
-  // const supabase = createClient()
-  // const userResponse = await supabase.auth.getUser()
-  // const userId = userResponse.data.user?.id
-  const userId = 'advait'
+  const supabase = createClient()
+  const userResponse = await supabase.auth.getUser()
+  const userId = userResponse.data.user?.id
 
 
   if (!userId) {
@@ -153,7 +152,6 @@ export async function DELETE(req: Request) {
   }
 
   try {
-    // Process input through Reminisc API
     const response = await fetch(`${apiUrl}/${memoryId}`, {
       method: 'DELETE',
       headers: headers,

@@ -4,12 +4,14 @@ import { CreateMemoryForm } from "@/components/CreateMemoryForm";
 import { Header } from "@/components/Header";
 import { MemoriesFieldset } from "@/components/MemoriesFieldset";
 import { ChatOutput } from "@/components/ChatOutput";
+import { NavBar } from "./Nav";
 
 export const Playground = () => {
   return (
-    <div className="grid h-screen w-full">
+    <div className="fixed grid h-screen w-full pl-[56px]">
+      <NavBar />
       <div className="h-screen flex flex-col">
-        <Header />
+        <Header title="Playground" />
         <main className="grid h-screen flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3 ">
           <div
             className="relative hidden flex-col items-start gap-8 md:flex "

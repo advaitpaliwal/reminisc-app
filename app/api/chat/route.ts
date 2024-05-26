@@ -38,26 +38,27 @@ export async function POST(req: NextRequest) {
     const messages = body.messages ?? [];
     const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage);
     const currentMessageContent = messages[messages.length - 1].content;
-    const supabase = createClient()
-    const userResponse = await supabase.auth.getUser()
-    const userId = userResponse.data.user?.id
-    if (!userId) {
-      return new Response('Unauthorized', { status: 401 })
-    }
-    const headers = {
-      'Content-Type': 'application/json',
-      'X-OPENAI-API-KEY': `${process.env.OPENAI_API_KEY}`,
-      'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
-    }
-    const searchMemoriesUrl = `${process.env.REMINISC_BASE_API_URL}/v0/memory/search`
-    const searchResponse = await fetch(searchMemoriesUrl, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify({ content: currentMessageContent, user_id: userId })
-    })
+    // const supabase = createClient()
+    // const userResponse = await supabase.auth.getUser()
+    // const userId = userResponse.data.user?.id
+    // if (!userId) {
+    //   return new Response('Unauthorized', { status: 401 })
+    // }
+    // const headers = {
+    //   'Content-Type': 'application/json',
+    //   'X-OPENAI-API-KEY': `${process.env.OPENAI_API_KEY}`,
+    //   'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
+    // }
+    // const searchMemoriesUrl = `${process.env.REMINISC_BASE_API_URL}/v0/memory/search`
+    // const searchResponse = await fetch(searchMemoriesUrl, {
+    //   method: 'POST',
+    //   headers: headers,
+    //   body: JSON.stringify({ content: currentMessageContent, user_id: userId })
+    // })
 
-    const searchJson = await searchResponse.json()
-    const relevantMemory = searchJson.map((memory: any) => memory.content).join(' ')
+    // const searchJson = await searchResponse.json()
+    // const relevantMemory = searchJson.map((memory: any) => memory.content).join(' ')
+    const relevantMemory = ''
     
     const prompt = PromptTemplate.fromTemplate(TEMPLATE);
     const model = new ChatOpenAI({

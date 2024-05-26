@@ -3,10 +3,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { useMemoryStore } from "@/stores/useMemoryStore";
 import { PencilIcon } from "lucide-react";
 import { toast } from "sonner";
+import { useMemories } from "@/hooks/useMemories";
 
 export const CreateMemoryForm = () => {
-  const { newMemoryContent, setNewMemoryContent, createMemory } =
-    useMemoryStore();
+  const { newMemoryContent, setNewMemoryContent } = useMemoryStore();
+  const { createMemory } = useMemories();
 
   const handleCreateMemory = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,11 +18,13 @@ export const CreateMemoryForm = () => {
           icon: <PencilIcon />,
           description: createdMemory.content,
         });
+        setNewMemoryContent("");
       } else {
         toast.error("Failed to create memory.");
       }
     }
   };
+
   return (
     <form
       onSubmit={handleCreateMemory}

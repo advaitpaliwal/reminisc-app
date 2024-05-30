@@ -57,7 +57,13 @@ export const ChatOutput = () => {
         <Label htmlFor="Output" className="sr-only">
           Output
         </Label>
-        <div className="flex-1">
+
+        <div className="flex-">
+          {messages.length === 0 && (
+            <ExampleMessages
+              onMessageClick={(description) => setInput(description)}
+            />
+          )}
           {messages.map((m, index) => (
             <div key={m.id}>
               <div
@@ -82,14 +88,8 @@ export const ChatOutput = () => {
         </div>
       </ScrollArea>
       <div className="flex-1" />
-      {messages.length === 0 && (
-        <ExampleMessages
-          onMessageClick={(description) => setInput(description)}
-        />
-      )}
       <form
         className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring flex items-center"
-        x-chunk="dashboard-03-chunk-1"
         onSubmit={handleChatSubmit}
       >
         <Label htmlFor="message" className="sr-only">

@@ -45,6 +45,7 @@ export default function SignupPage({
           `/signup?message=${encodeURIComponent("User already registered")}`
         );
       }
+      console.log("Sign up error: ", error);
       return redirect(
         `/signup?message=${encodeURIComponent("Could not authenticate user")}`
       );

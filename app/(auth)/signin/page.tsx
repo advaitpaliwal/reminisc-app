@@ -40,6 +40,7 @@ export default function SigninPage({
           `/signin?message=${encodeURIComponent("Invalid login credentials")}`
         );
       }
+      console.log("Sign in error: ", error);
       return redirect(
         `/signin?message=${encodeURIComponent("Could not authenticate user")}`
       );

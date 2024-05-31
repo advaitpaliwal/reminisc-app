@@ -46,9 +46,7 @@ export default function SignupPage({
         );
       }
       console.log("Sign up error: ", error);
-      return redirect(
-        `/signup?message=${encodeURIComponent("Could not authenticate user")}`
-      );
+      return redirect(`/signup?message=${encodeURIComponent(error.message)}`);
     }
 
     return redirect(

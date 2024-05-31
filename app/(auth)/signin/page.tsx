@@ -41,9 +41,7 @@ export default function SigninPage({
         );
       }
       console.log("Sign in error: ", error);
-      return redirect(
-        `/signin?message=${encodeURIComponent("Could not authenticate user")}`
-      );
+      return redirect(`/signin?message=${encodeURIComponent(error.message)}`);
     }
 
     return redirect("/");

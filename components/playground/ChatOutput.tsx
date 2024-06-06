@@ -1,12 +1,16 @@
+"use client";
+
+import { useEffect } from "react";
+import { useChat } from "@/hooks/useChat";
+import { toast } from "sonner";
+import { useToastStore } from "@/stores/useToastStore";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { TypingIndicator } from "@/components/playground/TypingIndicator";
 import { ExampleMessages } from "@/components/playground/ExampleMessages";
-import { useChat } from "ai/react";
 import { CornerDownLeft, NotebookPenIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
 import { useMemories } from "@/hooks/useMemories";
 
 export const ChatOutput = () => {
@@ -14,12 +18,34 @@ export const ChatOutput = () => {
     messages,
     input,
     setInput,
-    handleInputChange,
     handleSubmit,
     isLoading: chatEndpointIsLoading,
+    messageEndRef,
   } = useChat();
 
-  const { processMemory } = useMemories();
+  const { toastNotification, setToastNotification } = useToastStore();
+
+  useEffect(() => {
+    if (toastNotification) {
+      let toastMessage = "";
+      let toastDescription = "";
+
+      if (toastNotification.tool_name === "remember") {
+        toastMessage = "Memory Remembered";
+        toastDescription = toastNotification.input_params["memory"];
+      } else if (toastNotification.tool_name === "revise") {
+        toastMessage = "Memory Revised";
+        toastDescription = toastNotification.input_params["new_memory"];
+      }
+      if (toastMessage && toastDescription) {
+        toast.info(toastMessage, {
+          description: toastDescription,
+        });
+      }
+
+      setToastNotification(null);
+    }
+  }, [toastNotification, setToastNotification]);
 
   const handleChatSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,15 +56,7 @@ export const ChatOutput = () => {
       return;
     }
     try {
-      handleSubmit(e);
-      const data = await processMemory(input);
-      if (data?.content) {
-        toast.success("Memory updated", {
-          icon: <NotebookPenIcon />,
-          description: data.content,
-          className: "flex flex-row gap-4",
-        });
-      }
+      await handleSubmit(e);
     } catch (error: any) {
       console.log("Error creating memory: " + error.message);
     }
@@ -65,16 +83,16 @@ export const ChatOutput = () => {
             />
           )}
           {messages.map((m, index) => (
-            <div key={m.id}>
+            <div key={index}>
               <div
-                key={m.id}
+                key={index}
                 className={`mb-4 flex ${
-                  m.role === "user" ? "justify-end" : "justify-start"
+                  m.type === "human" ? "justify-end" : "justify-start"
                 }`}
               >
                 <div
                   className={`rounded-lg px-4 py-2 ${
-                    m.role === "user"
+                    m.type === "human"
                       ? "bg-[#f4f4f4] dark:text-primary dark:bg-[#2f2f2f]"
                       : "bg-none"
                   }`}
@@ -86,6 +104,7 @@ export const ChatOutput = () => {
           ))}
           {chatEndpointIsLoading && <TypingIndicator />}
         </div>
+        <div ref={messageEndRef} />
       </ScrollArea>
       <div className="flex-1" />
       <form
@@ -100,7 +119,7 @@ export const ChatOutput = () => {
           placeholder="Type your message here..."
           className="min-h-12 resize-none border-0 p-4 shadow-none focus-visible:ring-0 flex-grow"
           value={input}
-          onChange={handleInputChange}
+          onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyPress}
         />
         <Button

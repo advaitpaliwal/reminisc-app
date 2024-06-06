@@ -26,9 +26,10 @@ export const useChat = (): UseChatReturn => {
   const { setToastNotification } = useToastStore();
 
   const fetchStream = async (newMessages: ChatMessage[]) => {
+    console.log('fetchStream called with messages:', newMessages);
     setIsLoading(true);
     try {
-      const response = await fetch('/api/memory/agent', {
+      const response = await fetch('/api/chat/agent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,6 +39,8 @@ export const useChat = (): UseChatReturn => {
         }),
       });
 
+      console.log('Response:', response);
+
       if (!response.body) {
         throw new Error('No response body');
       }
@@ -45,43 +48,65 @@ export const useChat = (): UseChatReturn => {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let done = false;
+      let buffer = '';
 
       while (!done) {
         const { value, done: doneReading } = await reader.read();
         done = doneReading;
-        const chunk = decoder.decode(value, { stream: true });
+        buffer += decoder.decode(value, { stream: true });
 
-        const parsedChunk = JSON.parse(chunk);
-        if (parsedChunk.event === 'on_tool_start') {
-          setToastNotification({
-            tool_name: parsedChunk.tool_name,
-            input_params: parsedChunk.input,
-          });
-        }
+        let boundary = buffer.indexOf('}{');
+        while (boundary !== -1) {
+          const chunk = buffer.slice(0, boundary + 1);
+          buffer = buffer.slice(boundary + 1);
 
-        if (parsedChunk.event === 'on_chat_model_stream') {
-          updateLastAIMessage(parsedChunk.content);
-          scrollToBottom();
+          console.log('Chunk received:', chunk);
+          try {
+            const parsedChunk = JSON.parse(chunk);
+            console.log('Parsed chunk:', parsedChunk);
+
+            if (parsedChunk.event === 'on_tool_start') {
+              setToastNotification({
+                tool_name: parsedChunk.tool_name,
+                input_params: parsedChunk.input,
+              });
+              console.log('Tool started:', parsedChunk.tool_name);
+            }
+
+            if (parsedChunk.event === 'on_chat_model_stream') {
+              updateLastAIMessage(parsedChunk.content);
+              console.log('AI message updated:', parsedChunk.content);
+              scrollToBottom();
+            }
+          } catch (error) {
+            console.error('Error parsing chunk:', error);
+          }
+
+          boundary = buffer.indexOf('}{');
         }
       }
     } catch (error) {
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
+      console.log('fetchStream completed');
     }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    console.log('handleSubmit called with input:', input);
     const newMessage: ChatMessage = { content: input, type: 'human' };
     const newMessages: ChatMessage[] = [...messages, newMessage];
     addMessage(newMessage);
     setInput('');
+    console.log('New message added:', newMessage);
     await fetchStream(newMessages);
   };
 
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    console.log('Scrolled to bottom');
   };
 
   return {

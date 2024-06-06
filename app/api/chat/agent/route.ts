@@ -1,25 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from '@/utils/supabase/server';
+import 'server-only';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 
 // Define types for the request body
 interface ChatRequest {
   input: string;
+  user_id: string;
 }
-
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const json: ChatRequest = await req.json();
+    const json = await req.json();
+    const { input } = json;
+
+    const supabase = createClient();
+    const userResponse = await supabase.auth.getUser();
+    const userId = userResponse.data.user?.id;
+
+    if (!userId) {
+      console.log('Unauthorized request: No user ID found');
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+
+    const requestBody: ChatRequest = { input, user_id: userId };
 
     const headers = {
       'Content-Type': 'application/json',
     };
 
-    const response = await fetch(`${process.env.REMINISC_BASE_API_URL}/chat`, {
+    const response = await fetch(`${process.env.REMINISC_BASE_API_URL}/v0/chat`, {
       method: 'POST',
       headers: headers,
-      body: JSON.stringify(json),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.body) {
@@ -52,6 +66,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (error instanceof Error) {
       errorMessage = error.message;
     }
-    return new NextResponse(JSON.stringify({ error: errorMessage }), { status: 500 });
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

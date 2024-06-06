@@ -108,28 +108,6 @@ export const useMemories = () => {
     }
   };
 
-  const processMemory = async (memory: string) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/process`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: memory }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to process memory');
-      }
-      const processedMemory: Memory = await response.json();
-      console.log('Processed memory:', processedMemory);
-      if (processedMemory.content) {
-        const formattedMemory = formatTimestamps([processedMemory])[0];
-        setMemories((prevMemories) => [formattedMemory, ...prevMemories]);
-      }
-      return processedMemory;
-    } catch (error) {
-      console.error('Error processing memory:', error);
-      return null;
-    }
-  };
 
   return {
     memories: useMemoryStore((state) => state.memories),
@@ -138,6 +116,5 @@ export const useMemories = () => {
     createMemory,
     deleteMemory,
     editMemory,
-    processMemory,
   };
 };

@@ -1,9 +1,9 @@
 // /stores/toastStore.ts
-import {create} from 'zustand';
+import { create } from 'zustand';
 
 interface ToastNotification {
-  tool_name: string;
-  input_params: any;
+  message: string;
+  description: string;
 }
 
 interface ToastStore {

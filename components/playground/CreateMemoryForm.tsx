@@ -12,13 +12,14 @@ export const CreateMemoryForm = () => {
   const handleCreateMemory = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newMemoryContent.trim() !== "") {
-      const createdMemory = await createMemory(newMemoryContent);
-      if (createdMemory) {
+      try {
+        await createMemory(newMemoryContent);
         toast.success("Memory created successfully.", {
-          description: createdMemory.content,
+          description: newMemoryContent,
         });
         setNewMemoryContent("");
-      } else {
+      } catch (error) {
+        console.error("Error creating memory:", error);
         toast.error("Failed to create memory.");
       }
     }

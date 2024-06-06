@@ -2,6 +2,9 @@
 import { useState, useRef, FormEvent } from 'react';
 import { useChatStore } from '@/stores/useChatStore';
 import { useToastStore } from '@/stores/useToastStore';
+import { useMemoryStore } from '@/stores/useMemoryStore';
+import { Memory } from '@/types/memory';
+import { set } from 'date-fns';
 
 interface ChatMessage {
   content: string;
@@ -24,6 +27,7 @@ export const useChat = (): UseChatReturn => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const { messages, addMessage, updateLastAIMessage } = useChatStore();
   const { setToastNotification } = useToastStore();
+  const { memories, setMemories } = useMemoryStore();
 
   const fetchStream = async (newMessages: ChatMessage[]) => {
     console.log('fetchStream called with messages:', newMessages);
@@ -64,13 +68,43 @@ export const useChat = (): UseChatReturn => {
           try {
             const parsedChunk = JSON.parse(chunk);
             console.log('Parsed chunk:', parsedChunk);
-
-            if (parsedChunk.event === 'on_tool_start') {
-              setToastNotification({
-                tool_name: parsedChunk.tool_name,
-                input_params: parsedChunk.input,
-              });
-              console.log('Tool started:', parsedChunk.tool_name);
+            // if (parsedChunk.event === 'on_tool_start') {
+            //   const parsedInput = JSON.parse(parsedChunk.input);
+            //   if (parsedChunk.tool_name === 'remember') {
+            //     setToastNotification({
+            //       message: "Memory Remembered",
+            //       description: parsedInput.memory,
+            //     });
+            //   } else if (parsedChunk.tool_name === 'revise') {
+            //     setToastNotification({
+            //       message: "Memory Revised",
+            //       description: parsedInput.new_memory,
+            //     });
+            //   }
+            // }
+            if (parsedChunk.event === 'on_tool_end') {
+              console.log('Tool end event:', parsedChunk);
+              if (parsedChunk.tool_name === 'remember') {
+                console.log('Remember event:', parsedChunk);
+                const newMemory: Memory = JSON.parse(parsedChunk.output);
+                setToastNotification({
+                  message: "Memory Remembered",
+                  description: newMemory.content,
+                });
+                setMemories([newMemory, ...memories]);
+              } else if (parsedChunk.tool_name === 'revise') {
+                console.log('Revise event:', parsedChunk);
+                const updatedMemory: Memory = JSON.parse(parsedChunk.output);
+                setToastNotification({
+                  message: "Memory Revised",
+                  description: updatedMemory.content,
+                });
+                setMemories(
+                  memories.map((memory: Memory) =>
+                    memory.id === updatedMemory.id ? updatedMemory : memory
+                  )
+                );
+              }
             }
 
             if (parsedChunk.event === 'on_chat_model_stream') {

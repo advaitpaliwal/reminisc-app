@@ -59,7 +59,7 @@ export const MemoriesFieldset: React.FC = () => {
               <p className="text-md">{memory.content}</p>
             )}
             <div className="flex items-center justify-between">
-              <p className="text-sm">{memory.created_at}</p>
+              <p className="text-sm text-gray-300">{memory.updated_at}</p>
               <div className="flex gap-2">
                 <Button
                   variant="ghost"

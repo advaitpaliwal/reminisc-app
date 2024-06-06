@@ -11,7 +11,6 @@ import { ExampleMessages } from "@/components/playground/ExampleMessages";
 import { CornerDownLeft, NotebookPenIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useMemories } from "@/hooks/useMemories";
 
 export const ChatOutput = () => {
   const {
@@ -27,22 +26,9 @@ export const ChatOutput = () => {
 
   useEffect(() => {
     if (toastNotification) {
-      let toastMessage = "";
-      let toastDescription = "";
-
-      if (toastNotification.tool_name === "remember") {
-        toastMessage = "Memory Remembered";
-        toastDescription = toastNotification.input_params["memory"];
-      } else if (toastNotification.tool_name === "revise") {
-        toastMessage = "Memory Revised";
-        toastDescription = toastNotification.input_params["new_memory"];
-      }
-      if (toastMessage && toastDescription) {
-        toast.info(toastMessage, {
-          description: toastDescription,
-        });
-      }
-
+      toast.info(toastNotification.message, {
+        description: toastNotification.description,
+      });
       setToastNotification(null);
     }
   }, [toastNotification, setToastNotification]);

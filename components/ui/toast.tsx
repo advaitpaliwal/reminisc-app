@@ -100,7 +100,7 @@ const ToastTitle = React.forwardRef<
 ));
 ToastTitle.displayName = ToastPrimitives.Title.displayName;
 
-const description = React.forwardRef<
+const ToastDescription = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Description>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
 >(({ className, ...props }, ref) => (
@@ -110,7 +110,7 @@ const description = React.forwardRef<
     {...props}
   />
 ));
-description.displayName = ToastPrimitives.Description.displayName;
+ToastDescription.displayName = ToastPrimitives.Description.displayName;
 
 type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>;
 
@@ -123,7 +123,7 @@ export {
   ToastViewport,
   Toast,
   ToastTitle,
-  description,
+  ToastDescription,
   ToastClose,
   ToastAction,
 };

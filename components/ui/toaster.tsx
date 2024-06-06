@@ -3,7 +3,7 @@
 import {
   Toast,
   ToastClose,
-  description,
+  ToastDescription,
   ToastProvider,
   ToastTitle,
   ToastViewport,
@@ -20,7 +20,9 @@ export function Toaster() {
           <Toast key={id} {...props}>
             <div className="grid gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}
-              {description && <description>{description}</description>}
+              {description && (
+                <ToastDescription>{description}</ToastDescription>
+              )}
             </div>
             {action}
             <ToastClose />

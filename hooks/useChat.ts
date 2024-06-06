@@ -4,7 +4,7 @@ import { useChatStore } from '@/stores/useChatStore';
 import { useToastStore } from '@/stores/useToastStore';
 import { useMemoryStore } from '@/stores/useMemoryStore';
 import { Memory } from '@/types/memory';
-import { set } from 'date-fns';
+import { toast } from 'sonner';
 
 interface ChatMessage {
   content: string;
@@ -84,21 +84,23 @@ export const useChat = (): UseChatReturn => {
             // }
             if (parsedChunk.event === 'on_tool_end') {
               console.log('Tool end event:', parsedChunk);
-              if (parsedChunk.tool_name === 'remember') {
+              if (parsedChunk.tool_name === 'save_memory') {
                 console.log('Remember event:', parsedChunk);
                 const newMemory: Memory = JSON.parse(parsedChunk.output);
                 setToastNotification({
                   message: "Memory Remembered",
                   description: newMemory.content,
                 });
+                console.log('New memory:', newMemory);
                 setMemories([newMemory, ...memories]);
-              } else if (parsedChunk.tool_name === 'revise') {
+              } else if (parsedChunk.tool_name === 'update_memory') {
                 console.log('Revise event:', parsedChunk);
                 const updatedMemory: Memory = JSON.parse(parsedChunk.output);
                 setToastNotification({
                   message: "Memory Revised",
                   description: updatedMemory.content,
                 });
+                console.log('Updated memory:', updatedMemory);
                 setMemories(
                   memories.map((memory: Memory) =>
                     memory.id === updatedMemory.id ? updatedMemory : memory

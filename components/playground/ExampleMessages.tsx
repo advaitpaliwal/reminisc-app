@@ -29,7 +29,7 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
     },
     {
       title: "Career",
-      description: "I am building a startup",
+      description: "I am building an AI startup",
     },
   ];
   return (

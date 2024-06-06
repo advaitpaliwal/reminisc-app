@@ -1,4 +1,3 @@
-// MemoriesFieldset.tsx
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Edit, Trash } from "lucide-react";
 import { useMemories } from "@/hooks/useMemories";
 import { useMemoryStore } from "@/stores/useMemoryStore";
+import { parseISO, format } from "date-fns";
+
+const formatTimestamp = (timestamp: string) => {
+  return format(parseISO(timestamp), "MM/dd/yy h:mm a");
+};
 
 export const MemoriesFieldset: React.FC = () => {
   const { memories, isLoading, error, editMemory, deleteMemory } =
@@ -59,7 +63,9 @@ export const MemoriesFieldset: React.FC = () => {
               <p className="text-md">{memory.content}</p>
             )}
             <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-300">{memory.updated_at}</p>
+              <p className="text-sm text-gray-300">
+                {formatTimestamp(memory.updated_at)}
+              </p>
               <div className="flex gap-2">
                 <Button
                   variant="ghost"

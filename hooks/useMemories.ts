@@ -1,13 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useMemoryStore } from '@/stores/useMemoryStore';
 import { Memory } from '@/types/memory';
-import { parseISO, format } from 'date-fns';
 
 const API_BASE_URL = '/api/memory';
-
-const formatTimestamp = (timestamp: string) => {
-  return format(parseISO(timestamp), 'MM/dd/yy h:mm a');
-};
 
 export const useMemories = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,11 +20,7 @@ export const useMemories = () => {
           throw new Error('Failed to fetch memories');
         }
         const data: Memory[] = await response.json();
-        setMemories(data.map(memory => ({
-          ...memory,
-          created_at: formatTimestamp(memory.created_at),
-          updated_at: formatTimestamp(memory.updated_at),
-        })));
+        setMemories(data);
       } catch (error) {
         console.error('Error fetching memories:', error);
         setError('Failed to fetch memories');
@@ -52,14 +43,7 @@ export const useMemories = () => {
         throw new Error('Failed to create memory');
       }
       const newMemory: Memory = await response.json();
-      setMemories([
-        {
-          ...newMemory,
-          created_at: formatTimestamp(newMemory.created_at),
-          updated_at: formatTimestamp(newMemory.updated_at),
-        },
-        ...memories,
-      ]);
+      setMemories([newMemory, ...memories]);
     } catch (error) {
       console.error('Error creating memory:', error);
     }
@@ -93,13 +77,7 @@ export const useMemories = () => {
       }
       const updatedMemory: Memory = await response.json();
       setMemories(memories.map((memory) =>
-        memory.id === memoryId
-          ? {
-              ...updatedMemory,
-              created_at: formatTimestamp(updatedMemory.created_at),
-              updated_at: formatTimestamp(updatedMemory.updated_at),
-            }
-          : memory
+        memory.id === memoryId ? updatedMemory : memory
       ));
     } catch (error) {
       console.error('Error updating memory:', error);

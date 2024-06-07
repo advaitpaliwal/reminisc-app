@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/client";
+import { redirect } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export function useUser() {
@@ -36,6 +37,7 @@ export function useUser() {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
+    redirect("/signin");
   }, [supabase]);
 
   return useMemo(() => ({ user, signOut, loading }), [user, signOut, loading]);

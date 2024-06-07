@@ -37,7 +37,6 @@ export function useUser() {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
-    redirect("/signin");
   }, [supabase]);
 
   return useMemo(() => ({ user, signOut, loading }), [user, signOut, loading]);

@@ -12,6 +12,7 @@ import { ExternalLinkIcon, Loader } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useCallback } from "react";
 import { useUser } from "@/hooks/useUser";
+import { useRouter } from "next/navigation";
 
 function getUserInitials(firstName: string, lastName: string) {
   return `${firstName[0]}${lastName[0]}`;
@@ -19,6 +20,7 @@ function getUserInitials(firstName: string, lastName: string) {
 
 export function UserMenu() {
   const { user, signOut, loading } = useUser();
+  const router = useRouter();
 
   const userInitials = useMemo(() => {
     if (user?.user_metadata.first_name && user?.user_metadata.last_name) {
@@ -32,7 +34,8 @@ export function UserMenu() {
 
   const handleSignOut = useCallback(() => {
     signOut();
-  }, [signOut]);
+    router.push("/signin");
+  }, [signOut, router]);
 
   if (loading) {
     return <Loader className="animate-spin mr-2" />;

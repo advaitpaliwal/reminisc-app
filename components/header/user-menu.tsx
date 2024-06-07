@@ -82,7 +82,7 @@ export function UserMenu() {
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <a
-              href="https://www.reminisc.tech/"
+              href="https://www.reminisc.ai/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex w-full items-center justify-between text-xs"

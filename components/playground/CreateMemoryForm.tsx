@@ -40,6 +40,7 @@ export const CreateMemoryForm = () => {
             onChange={(e) => setNewMemoryContent(e.target.value)}
             placeholder="Enter a memory..."
             className="min-h-[4rem] resize-none"
+            autoFocus={false}
           />
         </div>
         <Button type="submit">Create</Button>

@@ -58,7 +58,7 @@ export const ChatOutput = () => {
   };
 
   return (
-    <div className="p-4 box-border relative flex flex-col h-[100%] rounded-xl bg-muted/50 lg:col-span-2">
+    <div className="p-4 box-border relative flex flex-col h-[80vh] md:h-[100%] rounded-xl bg-muted/50 lg:col-span-2">
       <ScrollArea className="flex-1 rounded-md overflow-auto">
         <div className="flex flex-col h-full">
           {messages.length === 0 && (
@@ -106,7 +106,7 @@ export const ChatOutput = () => {
         </Label>
         <Textarea
           id="message"
-          placeholder="Talk to Rem, your personal companion who remembers and grows with you..."
+          placeholder="Talk to Rem..."
           className="min-h-12 resize-none border-0 shadow-none focus-visible:ring-0 flex-grow"
           value={input}
           onChange={(e) => setInput(e.target.value)}

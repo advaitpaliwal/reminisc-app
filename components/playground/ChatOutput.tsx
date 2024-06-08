@@ -90,6 +90,7 @@ export const ChatOutput = () => {
             </div>
           ))}
           {chatEndpointIsLoading && <TypingIndicator />}
+          <div ref={messageEndRef} />
         </div>
       </ScrollArea>
       <Label htmlFor="Output" className="sr-only">

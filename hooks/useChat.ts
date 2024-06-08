@@ -40,7 +40,6 @@ export const useChat = (): UseChatReturn => {
         }),
       });
 
-
       if (!response.body) {
         throw new Error('No response body');
       }
@@ -118,6 +117,7 @@ export const useChat = (): UseChatReturn => {
     const newMessages: ChatMessage[] = [...messages, newMessage];
     addMessage(newMessage);
     setInput('');
+    scrollToBottom();
     console.log('New message added:', newMessage);
     await fetchStream(newMessages);
   };

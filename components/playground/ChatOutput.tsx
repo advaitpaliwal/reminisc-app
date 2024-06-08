@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, FormEvent, KeyboardEvent } from "react";
 import { useChat } from "@/hooks/useChat";
 import { toast } from "sonner";
 import { useToastStore } from "@/stores/useToastStore";
@@ -8,7 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { TypingIndicator } from "@/components/playground/TypingIndicator";
 import { ExampleMessages } from "@/components/playground/ExampleMessages";
-import { CornerDownLeft, NotebookPenIcon } from "lucide-react";
+import { CornerDownLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -24,6 +24,8 @@ export const ChatOutput = () => {
 
   const { toastNotification, setToastNotification } = useToastStore();
 
+  const inputRef = useRef<HTMLTextAreaElement>(null); // Specify that this ref is for an HTMLTextAreaElement
+
   useEffect(() => {
     if (toastNotification) {
       toast.info(toastNotification.message, {
@@ -33,7 +35,7 @@ export const ChatOutput = () => {
     }
   }, [toastNotification, setToastNotification]);
 
-  const handleChatSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChatSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (chatEndpointIsLoading) {
       return;
@@ -44,14 +46,15 @@ export const ChatOutput = () => {
     try {
       await handleSubmit(e);
     } catch (error: any) {
+      // Consider defining a more specific error type if possible
       console.log("Error creating memory: " + error.message);
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleChatSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+      handleChatSubmit(e as unknown as FormEvent<HTMLFormElement>);
     }
   };
 
@@ -65,7 +68,10 @@ export const ChatOutput = () => {
         <div className="flex-">
           {messages.length === 0 && (
             <ExampleMessages
-              onMessageClick={(description) => setInput(description)}
+              onMessageClick={(description: string) => {
+                setInput(description);
+                inputRef.current?.focus(); // Focus the input when a message is clicked
+              }}
             />
           )}
           {messages.map((m, index) => (
@@ -107,6 +113,7 @@ export const ChatOutput = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyPress}
+          ref={inputRef}
         />
         <Button
           type="submit"

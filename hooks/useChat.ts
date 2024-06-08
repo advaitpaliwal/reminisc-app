@@ -1,10 +1,8 @@
-// /hooks/useChat.ts
 import { useState, useRef, FormEvent } from 'react';
 import { useChatStore } from '@/stores/useChatStore';
 import { useToastStore } from '@/stores/useToastStore';
 import { useMemoryStore } from '@/stores/useMemoryStore';
 import { Memory } from '@/types/memory';
-import { toast } from 'sonner';
 
 interface ChatMessage {
   content: string;
@@ -30,7 +28,6 @@ export const useChat = (): UseChatReturn => {
   const { memories, setMemories } = useMemoryStore();
 
   const fetchStream = async (newMessages: ChatMessage[]) => {
-    console.log('fetchStream called with messages:', newMessages);
     setIsLoading(true);
     try {
       const response = await fetch('/api/chat/agent', {
@@ -43,7 +40,6 @@ export const useChat = (): UseChatReturn => {
         }),
       });
 
-      console.log('Response:', response);
 
       if (!response.body) {
         throw new Error('No response body');
@@ -64,24 +60,10 @@ export const useChat = (): UseChatReturn => {
           const chunk = buffer.slice(0, boundary + 1);
           buffer = buffer.slice(boundary + 1);
 
-          console.log('Chunk received:', chunk);
           try {
             const parsedChunk = JSON.parse(chunk);
             console.log('Parsed chunk:', parsedChunk);
-            // if (parsedChunk.event === 'on_tool_start') {
-            //   const parsedInput = JSON.parse(parsedChunk.input);
-            //   if (parsedChunk.tool_name === 'remember') {
-            //     setToastNotification({
-            //       message: "Memory Remembered",
-            //       description: parsedInput.memory,
-            //     });
-            //   } else if (parsedChunk.tool_name === 'revise') {
-            //     setToastNotification({
-            //       message: "Memory Revised",
-            //       description: parsedInput.new_memory,
-            //     });
-            //   }
-            // }
+
             if (parsedChunk.event === 'on_tool_end') {
               console.log('Tool end event:', parsedChunk);
               if (parsedChunk.tool_name === 'save_memory') {
@@ -92,7 +74,7 @@ export const useChat = (): UseChatReturn => {
                   description: newMemory.content,
                 });
                 console.log('New memory:', newMemory);
-                setMemories([newMemory, ...memories]);
+                setMemories((currentMemories: Memory[]) => [newMemory, ...currentMemories]);
               } else if (parsedChunk.tool_name === 'update_memory') {
                 console.log('Revise event:', parsedChunk);
                 const updatedMemory: Memory = JSON.parse(parsedChunk.output);
@@ -101,12 +83,12 @@ export const useChat = (): UseChatReturn => {
                   description: updatedMemory.content,
                 });
                 console.log('Updated memory:', updatedMemory);
-                setMemories(
-                  memories.map((memory: Memory) =>
+                setMemories((currentMemories: Memory[]) =>
+                  currentMemories.map((memory: Memory) =>
                     memory.id === updatedMemory.id ? updatedMemory : memory
                   )
                 );
-              }
+              }                    
             }
 
             if (parsedChunk.event === 'on_chat_model_stream') {

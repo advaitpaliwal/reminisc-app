@@ -6,7 +6,7 @@ interface MemoryStore {
   newMemoryContent: string;
   setNewMemoryContent: (content: string) => void;
   editingMemoryId: string | null;
-  setMemories: (memories: Memory[]) => void;
+  setMemories: (memories: Memory[] | ((currentMemories: Memory[]) => Memory[])) => void;
   setEditingMemoryId: (id: string | null) => void;
 }
 
@@ -15,6 +15,8 @@ export const useMemoryStore = create<MemoryStore>((set) => ({
   newMemoryContent: '',
   setNewMemoryContent: (content) => set({ newMemoryContent: content }),
   editingMemoryId: null,
-  setMemories: (memories) => set({ memories }),
+  setMemories: (memories) => set((state) => ({
+    memories: typeof memories === 'function' ? memories(state.memories) : memories
+  })),
   setEditingMemoryId: (id) => set({ editingMemoryId: id }),
 }));

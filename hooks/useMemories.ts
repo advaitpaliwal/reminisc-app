@@ -20,6 +20,8 @@ export const useMemories = () => {
           throw new Error('Failed to fetch memories');
         }
         const data: Memory[] = await response.json();
+        // Sort memories in descending order by 'updated_at'
+        data.sort((a, b) => b.updated_at.localeCompare(a.updated_at));
         setMemories(data);
       } catch (error) {
         console.error('Error fetching memories:', error);
@@ -43,7 +45,12 @@ export const useMemories = () => {
         throw new Error('Failed to create memory');
       }
       const newMemory: Memory = await response.json();
-      setMemories([newMemory, ...memories]);
+      // Insert new memory and re-sort the list
+      setMemories(currentMemories => {
+        const updatedMemories = [newMemory, ...currentMemories];
+        updatedMemories.sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+        return updatedMemories;
+      });
     } catch (error) {
       console.error('Error creating memory:', error);
     }
@@ -59,7 +66,10 @@ export const useMemories = () => {
       if (!response.ok) {
         throw new Error('Failed to delete memory');
       }
-      setMemories(memories.filter((memory) => memory.id !== memoryId));
+      // Remove memory and re-sort if needed
+      setMemories(currentMemories => 
+        currentMemories.filter(memory => memory.id !== memoryId)
+      );
     } catch (error) {
       console.error('Error deleting memory:', error);
     }
@@ -76,9 +86,14 @@ export const useMemories = () => {
         throw new Error('Failed to update memory');
       }
       const updatedMemory: Memory = await response.json();
-      setMemories(memories.map((memory) =>
-        memory.id === memoryId ? updatedMemory : memory
-      ));
+      // Update memory in the list and re-sort
+      setMemories(currentMemories => {
+        const updatedMemories = currentMemories.map(memory =>
+          memory.id === memoryId ? updatedMemory : memory
+        );
+        updatedMemories.sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+        return updatedMemories;
+      });
     } catch (error) {
       console.error('Error updating memory:', error);
     }

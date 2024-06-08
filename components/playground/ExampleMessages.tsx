@@ -18,7 +18,7 @@ interface ExampleMessagesProps {
 export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
   onMessageClick,
 }) => {
-  const messages = [
+  const messages: ExampleMessage[] = [
     {
       title: "Name",
       description: "My name is Advait Paliwal",

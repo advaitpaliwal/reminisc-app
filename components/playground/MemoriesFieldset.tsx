@@ -34,7 +34,7 @@ export const MemoriesFieldset: React.FC = () => {
   };
 
   return (
-    <fieldset className="max-h-[60vh] grid gap-6 rounded-lg border p-4">
+    <fieldset className="h-[60vh] md:h-[70vh] grid gap-6 rounded-lg border p-4">
       <legend className="-ml-1 px-1 text-sm font-medium">Saved Memories</legend>
       <ScrollArea className=" rounded-md p-2">
         {memories.length === 0 && (

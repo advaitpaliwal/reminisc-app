@@ -23,7 +23,7 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
     {
       title: "Name",
       description: "My name is ",
-      placeholder: "Advait Paliwal",
+      placeholder: "Advait",
     },
     {
       title: "Hobby",
@@ -31,29 +31,30 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
       placeholder: "play the piano",
     },
     {
-      title: "Career",
+      title: "Diet",
       description: "I am ",
-      placeholder: "building an AI startup",
+      placeholder: "vegetarian",
     },
   ];
+
   return (
     <div className="flex items-center justify-center h-full">
-      <div className="grid grid-cols-3 gap-1 md:gap-4 md:p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 sm:p-4">
         {messages.map((m) => (
           <Card
             key={m.title}
-            className="w-full cursor-pointer"
+            className="cursor-pointer"
             onClick={() => onMessageClick(m.description)}
           >
             <CardHeader>
               <CardTitle>
-                <span className="text-sm">{m.title}</span>
+                <span className="text-lg">{m.title}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <CardDescription>
-                <span className="text-sm">
-                  {m.description}
+                <span className="text-sm">{m.description}</span>
+                <span className="text-sm italic text-gray-300">
                   {m.placeholder}
                 </span>
               </CardDescription>

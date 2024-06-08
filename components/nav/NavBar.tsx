@@ -13,6 +13,7 @@ import ReminiscLogo from "../header/logo";
 import React from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "../header/theme-toggle";
+import { UserMenu } from "../header/user-menu";
 
 interface NavBarProps {
   className?: string;
@@ -144,13 +145,13 @@ export const NavBar: React.FC<NavBarProps> = ({ className }) => {
               variant="ghost"
               size="icon"
               className="mt-auto rounded-lg"
-              aria-label="Change theme"
+              aria-label="Theme"
             >
               <ThemeToggle />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={5}>
-            Help
+            Theme
           </TooltipContent>
         </Tooltip>
       </nav>

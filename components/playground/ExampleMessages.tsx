@@ -31,9 +31,9 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
       placeholder: "play the piano",
     },
     {
-      title: "Diet",
-      description: "I am ",
-      placeholder: "vegetarian",
+      title: "Major",
+      description: "I am studying ",
+      placeholder: "computer science",
     },
   ];
 

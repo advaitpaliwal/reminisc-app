@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useMemoryStore } from "@/stores/useMemoryStore";
-import { PencilIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useMemories } from "@/hooks/useMemories";
 

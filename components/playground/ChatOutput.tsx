@@ -24,7 +24,7 @@ export const ChatOutput = () => {
 
   const { toastNotification, setToastNotification } = useToastStore();
 
-  const inputRef = useRef<HTMLTextAreaElement>(null); // Specify that this ref is for an HTMLTextAreaElement
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (toastNotification) {
@@ -46,7 +46,6 @@ export const ChatOutput = () => {
     try {
       await handleSubmit(e);
     } catch (error: any) {
-      // Consider defining a more specific error type if possible
       console.log("Error creating memory: " + error.message);
     }
   };
@@ -59,48 +58,46 @@ export const ChatOutput = () => {
   };
 
   return (
-    <div className="p-4 box-border relative flex flex-col h-[80vh] md:h-[100%] rounded-xl bg-muted/50 lg:col-span-2">
-      <ScrollArea className="h-[100%] rounded-md">
-        <div className="flex-">
+    <div className="p-4 box-border relative flex flex-col h-[100%] rounded-xl bg-muted/50 lg:col-span-2">
+      <ScrollArea className="flex-1 rounded-md overflow-auto">
+        <div className="flex flex-col h-full">
           {messages.length === 0 && (
-            <ExampleMessages
-              onMessageClick={(description: string) => {
-                setInput(description);
-                inputRef.current?.focus(); // Focus the input when a message is clicked
-              }}
-            />
+            <div className="flex-grow flex items-center justify-center">
+              <ExampleMessages
+                onMessageClick={(description: string) => {
+                  setInput(description);
+                  inputRef.current?.focus();
+                }}
+              />
+            </div>
           )}
           {messages.map((m, index) => (
-            <div key={index}>
+            <div
+              key={index}
+              className={`mb-4 flex ${
+                m.type === "human" ? "justify-end" : "justify-start"
+              }`}
+            >
               <div
-                key={index}
-                className={`mb-4 flex ${
-                  m.type === "human" ? "justify-end" : "justify-start"
+                className={`rounded-lg px-4 py-2 ${
+                  m.type === "human"
+                    ? "bg-[#f4f4f4] dark:text-primary dark:bg-[#2f2f2f]"
+                    : "bg-none"
                 }`}
               >
-                <div
-                  className={`rounded-lg px-4 py-2 ${
-                    m.type === "human"
-                      ? "bg-[#f4f4f4] dark:text-primary dark:bg-[#2f2f2f]"
-                      : "bg-none"
-                  }`}
-                >
-                  {m.content}
-                </div>
+                {m.content}
               </div>
             </div>
           ))}
           {chatEndpointIsLoading && <TypingIndicator />}
         </div>
-        <Label htmlFor="Output" className="sr-only">
-          Output
-        </Label>
-
-        <div ref={messageEndRef} />
       </ScrollArea>
-      <div className="flex-1" />
+      <Label htmlFor="Output" className="sr-only">
+        Output
+      </Label>
+
       <form
-        className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring flex items-center"
+        className="mt-auto relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring flex items-center p-4"
         onSubmit={handleChatSubmit}
       >
         <Label htmlFor="message" className="sr-only">
@@ -108,8 +105,8 @@ export const ChatOutput = () => {
         </Label>
         <Textarea
           id="message"
-          placeholder="Type your message here..."
-          className="min-h-12 resize-none border-0 p-4 shadow-none focus-visible:ring-0 flex-grow"
+          placeholder="Message Rem"
+          className="min-h-12 resize-none border-0 shadow-none focus-visible:ring-0 flex-grow"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyPress}

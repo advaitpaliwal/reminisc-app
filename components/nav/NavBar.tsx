@@ -12,6 +12,7 @@ import { SquareTerminal, Book, KeyRoundIcon } from "lucide-react";
 import ReminiscLogo from "../header/logo";
 import React from "react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "../header/theme-toggle";
 
 interface NavBarProps {
   className?: string;
@@ -133,6 +134,23 @@ export const NavBar: React.FC<NavBarProps> = ({ className }) => {
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={5}>
             Documentation
+          </TooltipContent>
+        </Tooltip>
+      </nav>
+      <nav className="mt-auto grid gap-1 p-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="mt-auto rounded-lg"
+              aria-label="Change theme"
+            >
+              <ThemeToggle />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="right" sideOffset={5}>
+            Help
           </TooltipContent>
         </Tooltip>
       </nav>

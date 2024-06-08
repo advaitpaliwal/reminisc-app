@@ -99,7 +99,7 @@ export const NavBar: React.FC<NavBarProps> = ({ className }) => {
             Playground
           </TooltipContent>
         </Tooltip>
-        <Tooltip>
+        {/* <Tooltip>
           <TooltipTrigger asChild>
             <Link href="/api-keys">
               <Button
@@ -136,7 +136,7 @@ export const NavBar: React.FC<NavBarProps> = ({ className }) => {
           <TooltipContent side="right" sideOffset={5}>
             Documentation
           </TooltipContent>
-        </Tooltip>
+        </Tooltip> */}
       </nav>
       <nav className="mt-auto grid gap-1 p-2">
         <Tooltip>

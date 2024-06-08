@@ -9,6 +9,7 @@ import {
 interface ExampleMessage {
   title: string;
   description: string;
+  placeholder?: string;
 }
 
 interface ExampleMessagesProps {
@@ -21,24 +22,27 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
   const messages: ExampleMessage[] = [
     {
       title: "Name",
-      description: "My name is Advait Paliwal",
+      description: "My name is ",
+      placeholder: "Advait Paliwal",
     },
     {
       title: "Hobby",
-      description: "I like to play the piano",
+      description: "I like to ",
+      placeholder: "play the piano",
     },
     {
       title: "Career",
-      description: "I am building an AI startup",
+      description: "I am ",
+      placeholder: "building an AI startup",
     },
   ];
   return (
     <div className="flex items-center justify-center h-full">
-      <div className="grid grid-cols-3 gap-2 my-auto">
+      <div className="grid grid-cols-3 gap-1">
         {messages.map((m) => (
           <Card
             key={m.title}
-            className="w-full rounded-xl cursor-pointer"
+            className="w-full cursor-pointer"
             onClick={() => onMessageClick(m.description)}
           >
             <CardHeader>
@@ -48,7 +52,10 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
             </CardHeader>
             <CardContent>
               <CardDescription>
-                <span>{m.description}</span>
+                <span className="text-sm">
+                  {m.description}
+                  {m.placeholder}
+                </span>
               </CardDescription>
             </CardContent>
           </Card>

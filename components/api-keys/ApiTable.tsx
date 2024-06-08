@@ -137,6 +137,7 @@ export function ApiKeysTable() {
   }, []);
 
   const formatKey = (key: string) => {
+    if (isMobile) return `...${key.slice(-4)}`;
     return `${key.slice(0, 4)}...${key.slice(-4)}`;
   };
 
@@ -193,7 +194,7 @@ export function ApiKeysTable() {
               <TableHeader>
                 <TableRow>
                   <TableHead>NAME</TableHead>
-                  <TableHead>API KEY</TableHead>
+                  <TableHead>KEY</TableHead>
                   {!isMobile && <TableHead>CREATED</TableHead>}
                   {!isMobile && <TableHead>LAST USED</TableHead>}
                   <TableHead></TableHead>

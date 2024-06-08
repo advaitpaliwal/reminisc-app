@@ -34,7 +34,7 @@ export const MemoriesFieldset: React.FC = () => {
   };
 
   return (
-    <fieldset className="grid gap-2 rounded-lg border">
+    <fieldset className="grid gap-6 rounded-lg border p-4">
       <legend className="-ml-1 px-1 text-sm font-medium">Memories</legend>
       <ScrollArea className="max-h-[60vh] rounded-md p-2">
         {memories.length === 0 && (
@@ -43,7 +43,7 @@ export const MemoriesFieldset: React.FC = () => {
           </p>
         )}
         {memories.map((memory) => (
-          <div key={memory.id} className="grid gap-2 p-2">
+          <div key={memory.id} className="grid gap-2">
             {editingMemoryId === memory.id ? (
               <form
                 onSubmit={(e) =>

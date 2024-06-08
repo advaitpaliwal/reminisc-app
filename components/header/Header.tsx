@@ -16,7 +16,7 @@ export const Header: React.FC<HeaderProps> = ({ title, className }) => {
         className
       )}
     >
-      <h1 className="text-xl font-semibold">{title}</h1>
+      <h1 className="px-2 text-xl font-semibold">{title}</h1>
       <div className="flex-1" />
       <UserMenu />
       <MemoriesSheet />

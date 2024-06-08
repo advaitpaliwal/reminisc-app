@@ -38,7 +38,7 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
   ];
   return (
     <div className="flex items-center justify-center h-full">
-      <div className="grid grid-cols-3 gap-1">
+      <div className="grid grid-cols-3 gap-1 md:gap-4 md:p-4">
         {messages.map((m) => (
           <Card
             key={m.title}

@@ -141,14 +141,9 @@ export const NavBar: React.FC<NavBarProps> = ({ className }) => {
       <nav className="mt-auto grid gap-1 p-2">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="mt-auto rounded-lg"
-              aria-label="Theme"
-            >
+            <div>
               <ThemeToggle />
-            </Button>
+            </div>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={5}>
             Theme

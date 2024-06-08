@@ -59,7 +59,7 @@ export const ChatOutput = () => {
   };
 
   return (
-    <div className="p-4 box-border relative flex h-[100%] min-h-[50vh] flex-col rounded-xl bg-muted/50 lg:col-span-2">
+    <div className="p-4 box-border relative flex flex-col h-[80vh] md:h-[100%] rounded-xl bg-muted/50 lg:col-span-2">
       <ScrollArea className="h-[100%] rounded-md">
         <div className="flex-">
           {messages.length === 0 && (

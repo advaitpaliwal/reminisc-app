@@ -54,9 +54,7 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
             <CardContent>
               <CardDescription>
                 <span className="text-sm">{m.description}</span>
-                <span className="text-sm italic text-gray-300">
-                  {m.placeholder}
-                </span>
+                <span className="text-sm italic">{m.placeholder}</span>
               </CardDescription>
             </CardContent>
           </Card>

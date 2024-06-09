@@ -43,7 +43,7 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
         {messages.map((m) => (
           <Card
             key={m.title}
-            className="cursor-pointer hover:shadow-lg transition-shadow flex flex-col justify-center text-center w-full bg-black text-white rounded-lg p-6"
+            className="cursor-pointer hover:shadow-lg transition-shadow flex flex-col justify-center text-center w-full rounded-lg"
             onClick={() => onMessageClick(m.description)}
           >
             <CardHeader>

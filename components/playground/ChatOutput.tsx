@@ -59,7 +59,7 @@ export const ChatOutput = () => {
 
   return (
     <div className="p-4 box-border relative flex flex-col h-[80vh] md:h-[90vh] rounded-xl bg-muted/50 lg:col-span-2">
-      <ScrollArea className="flex-1 rounded-md overflow-auto">
+      <ScrollArea className="flex-1 rounded-md overflow-auto p-2">
         <div className="flex flex-col h-full">
           {messages.length === 0 && (
             <div className="flex-grow flex items-center justify-center">
@@ -79,7 +79,7 @@ export const ChatOutput = () => {
               }`}
             >
               <div
-                className={`rounded-lg px-4 py-2 ${
+                className={`rounded-lg px-4 py-2 text-lg ${
                   m.type === "human"
                     ? "bg-[#f4f4f4] dark:text-primary dark:bg-[#2f2f2f]"
                     : "bg-none"

@@ -39,16 +39,16 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
 
   return (
     <div className="flex items-center justify-center h-full">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 sm:p-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4">
         {messages.map((m) => (
           <Card
             key={m.title}
-            className="cursor-pointer"
+            className="cursor-pointer hover:shadow-lg transition-shadow flex flex-col justify-center text-center w-full bg-black text-white rounded-lg p-6"
             onClick={() => onMessageClick(m.description)}
           >
             <CardHeader>
               <CardTitle>
-                <span className="text-lg">{m.title}</span>
+                <span className="text-lg font-semibold">{m.title}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>

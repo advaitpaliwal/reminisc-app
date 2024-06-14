@@ -63,7 +63,6 @@ export const useChat = (): UseChatReturn => {
         const { value, done: doneReading } = await reader.read();
         done = doneReading;
         buffer += decoder.decode(value, { stream: true });
-
         let boundary = buffer.indexOf('}{');
         while (boundary !== -1) {
           const chunk = buffer.slice(0, boundary + 1);
@@ -115,11 +114,21 @@ export const useChat = (): UseChatReturn => {
           boundary = buffer.indexOf('}{');
         }
       }
+      if (buffer.length > 0) {
+        try {
+          const parsedChunk = JSON.parse(buffer);
+          if (parsedChunk.event === 'on_chat_model_stream') {
+            updateLastAIMessage(parsedChunk.content);
+            scrollToBottom();
+          }
+        } catch (error) {
+          console.error('Error parsing remaining chunk:', error);
+        }
+      }
     } catch (error) {
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
-      console.log('fetchStream completed');
     }
   };
 

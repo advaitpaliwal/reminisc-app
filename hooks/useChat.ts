@@ -3,6 +3,7 @@ import { useChatStore } from '@/stores/useChatStore';
 import { useToastStore } from '@/stores/useToastStore';
 import { useMemoryStore } from '@/stores/useMemoryStore';
 import { Memory } from '@/types/memory';
+import { useMemories } from './useMemories';
 
 interface ChatMessage {
   content: string;
@@ -26,6 +27,7 @@ export const useChat = (): UseChatReturn => {
   const { messages, addMessage, updateLastAIMessage } = useChatStore();
   const { setToastNotification } = useToastStore();
   const { memories, setMemories } = useMemoryStore();
+  const {editMemory, deleteMemory} = useMemories();
 
   const fetchStream = async (newMessages: ChatMessage[]) => {
     setIsLoading(true);
@@ -71,6 +73,9 @@ export const useChat = (): UseChatReturn => {
                 setToastNotification({
                   message: "Memory Remembered",
                   description: newMemory.content,
+                  onUndo: async () => {
+                    await deleteMemory(newMemory.id, false); // Pass false to skip toast
+                  },
                 });
                 console.log('New memory:', newMemory);
                 setMemories((currentMemories: Memory[]) => [newMemory, ...currentMemories]);
@@ -80,6 +85,13 @@ export const useChat = (): UseChatReturn => {
                 setToastNotification({
                   message: "Memory Revised",
                   description: updatedMemory.content,
+                  onUndo: async () => {
+                    // Revert the memory update by calling the update function with the old content
+                    const oldMemory = memories.find(memory => memory.id === updatedMemory.id);
+                    if (oldMemory) {
+                      await editMemory(oldMemory.id, oldMemory.content, false);
+                    }
+                  },
                 });
                 console.log('Updated memory:', updatedMemory);
                 setMemories((currentMemories: Memory[]) =>

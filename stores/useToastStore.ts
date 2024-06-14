@@ -1,9 +1,9 @@
-// /stores/toastStore.ts
 import { create } from 'zustand';
 
 interface ToastNotification {
   message: string;
   description: string;
+  onUndo?: () => void;
 }
 
 interface ToastStore {

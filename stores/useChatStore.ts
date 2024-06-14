@@ -22,7 +22,7 @@ export const useChatStore = create<ChatStore>((set) => ({
   messages: [],
   model: 'gpt-4o',
   temperature: 0.7,
-  systemPrompt: "You are Rem, a super friendly AI assistant, excited to meet a new person.",
+  systemPrompt: "You are Reminisc, a super friendly AI assistant, excited to meet a new person.",
   setModel: (model) => set({ model }),
   setTemperature: (temperature) => set({ temperature }),
   setSystemPrompt: (prompt) => set({ systemPrompt: prompt }),

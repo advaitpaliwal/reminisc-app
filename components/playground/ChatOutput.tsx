@@ -116,7 +116,7 @@ export const ChatOutput = () => {
         </Label>
         <Textarea
           id="message"
-          placeholder="Talk to Rem, your personal companion who remembers and grows with you..."
+          placeholder="Ask Reminisc to remember something"
           className="min-h-12 resize-none border-0 shadow-none focus-visible:ring-0 flex-grow"
           value={input}
           onChange={(e) => setInput(e.target.value)}

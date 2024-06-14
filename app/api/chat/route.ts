@@ -1,85 +1,68 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Message as VercelChatMessage, StreamingTextResponse, createStreamDataTransformer } from "ai";
+import { createClient } from '@/utils/supabase/server';
+import 'server-only';
 
-import { ChatOpenAI } from "@langchain/openai";
-import { PromptTemplate } from "@langchain/core/prompts";
-import { HttpResponseOutputParser } from "langchain/output_parsers";
-import { createClient } from "@/utils/supabase/server";
+export const runtime = 'edge';
 
-export const runtime = "edge";
-
-const formatMessage = (message: VercelChatMessage) => {
-  return `${message.role}: ${message.content}`;
-};
-
-const TEMPLATE = `You are a super friendly AI assistant named Rem who is excited to meet a new person.
-Engage in warm, open conversation and ask questions to get to know them better.
-Use the chat history and retrieved memories to provide relevant context and follow up on previous topics.
-Keep the conversation flowing naturally and focus on building a positive, supportive relationship.
-
-Retrieved Memory:
-{relevant_memory}
-
-Current conversation:
-{chat_history}
-
-User: {input}
-AI:`;
-
-/**
- * This handler initializes and calls a simple chain with a prompt,
- * chat model, and output parser. See the docs for more information:
- *
- * https://js.langchain.com/docs/guides/expression_language/cookbook#prompttemplate--llm--outputparser
- */
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const body = await req.json();
-    const messages = body.messages ?? [];
-    const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage);
-    const currentMessageContent = messages[messages.length - 1].content;
-    const supabase = createClient()
-    const userResponse = await supabase.auth.getUser()
-    const userId = userResponse.data.user?.id
+    const json = await req.json();
+    const { messages, model, temperature } = json ;
+
+    const supabase = createClient();
+    const userResponse = await supabase.auth.getUser();
+    const userId = userResponse.data.user?.id;
+
     if (!userId) {
-      return new Response('Unauthorized', { status: 401 })
+      console.log('Unauthorized request: No user ID found');
+      return new NextResponse('Unauthorized', { status: 401 });
     }
+
     const headers = {
       'Content-Type': 'application/json',
-      'X-OPENAI-API-KEY': `${process.env.OPENAI_API_KEY}`,
-      'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
-    }
-    const searchMemoriesUrl = `${process.env.REMINISC_BASE_API_URL}/v0/memory/search`
-    const searchResponse = await fetch(searchMemoriesUrl, {
+    };
+
+    const response = await fetch(`${process.env.REMINISC_BASE_API_URL}/v0/chat`, {
       method: 'POST',
       headers: headers,
-      body: JSON.stringify({ content: currentMessageContent, user_id: userId })
-    })
-
-    const searchJson = await searchResponse.json()
-    const relevantMemory = searchJson.map((memory: any) => memory.content).join(' ')
-    
-    const prompt = PromptTemplate.fromTemplate(TEMPLATE);
-    const model = new ChatOpenAI({
-      temperature: 0.3,
-      modelName: "gpt-3.5-turbo",
-    });
-    const outputParser = new HttpResponseOutputParser();
-    const chain = prompt.pipe(model).pipe(outputParser);
-    
-
-    const stream = await chain.stream({
-      chat_history: formattedPreviousMessages.join("\n"),
-      input: currentMessageContent,
-      relevant_memory: relevantMemory,
+      body: JSON.stringify({
+        user_id: userId,
+        messages,
+        model,
+        temperature,
+      }),
     });
 
+    if (!response.body) {
+      throw new Error("No response body from FastAPI");
+    }
 
-    return new StreamingTextResponse(
-      stream.pipeThrough(createStreamDataTransformer()),
-    );
-  } catch (e: any) {
-    console.error("Error occurred:", e);
-    return NextResponse.json({ error: e.message }, { status: e.status ?? 500 });
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        const reader = response.body?.getReader();
+        if (reader) {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            controller.enqueue(value);
+          }
+          controller.close();
+        }
+      },
+    });
+
+    return new NextResponse(readableStream, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+  } catch (error) {
+    console.error('Error:', error);
+    let errorMessage = 'An unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

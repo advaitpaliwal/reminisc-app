@@ -66,12 +66,9 @@ export const useChat = (): UseChatReturn => {
 
           try {
             const parsedChunk = JSON.parse(chunk);
-            console.log('Parsed chunk:', parsedChunk);
 
             if (parsedChunk.event === 'on_tool_end') {
-              console.log('Tool end event:', parsedChunk);
               if (parsedChunk.tool_name === 'create_memory') {
-                console.log('Remember event:', parsedChunk);
                 const newMemory: Memory = JSON.parse(parsedChunk.output);
                 setToastNotification({
                   message: "Memory Remembered",
@@ -80,10 +77,8 @@ export const useChat = (): UseChatReturn => {
                     await deleteMemory(newMemory.id, false); // Pass false to skip toast
                   },
                 });
-                console.log('New memory:', newMemory);
                 setMemories((currentMemories: Memory[]) => [newMemory, ...currentMemories]);
               } else if (parsedChunk.tool_name === 'update_memory') {
-                console.log('Revise event:', parsedChunk);
                 const updatedMemory: Memory = JSON.parse(parsedChunk.output);
                 setToastNotification({
                   message: "Memory Revised",
@@ -96,7 +91,6 @@ export const useChat = (): UseChatReturn => {
                     }
                   },
                 });
-                console.log('Updated memory:', updatedMemory);
                 setMemories((currentMemories: Memory[]) =>
                   currentMemories.map((memory: Memory) =>
                     memory.id === updatedMemory.id ? updatedMemory : memory
@@ -107,7 +101,6 @@ export const useChat = (): UseChatReturn => {
 
             if (parsedChunk.event === 'on_chat_model_stream') {
               updateLastAIMessage(parsedChunk.content);
-              console.log('AI message updated:', parsedChunk.content);
               scrollToBottom();
             }
           } catch (error) {
@@ -127,19 +120,16 @@ export const useChat = (): UseChatReturn => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log('handleSubmit called with input:', input);
     const newMessage: ChatMessage = { content: input, role: 'user' };
     const newMessages: ChatMessage[] = [...messages, newMessage];
     addMessage(newMessage);
     setInput('');
     scrollToBottom();
-    console.log('New message added:', newMessage);
     await fetchStream(newMessages);
   };
 
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    console.log('Scrolled to bottom');
   };
 
   return {

@@ -3,7 +3,7 @@ import { create } from 'zustand';
 
 interface ChatMessage {
   content: string;
-  type: 'human' | 'ai';
+  role: 'user' | 'assistant';
 }
 
 interface ChatStore {
@@ -23,13 +23,13 @@ export const useChatStore = create<ChatStore>((set) => ({
     set((state) => {
       const updatedMessages = [...state.messages];
       const lastMessage = updatedMessages[updatedMessages.length - 1];
-      if (lastMessage && lastMessage.type === 'ai') {
+      if (lastMessage && lastMessage.role === 'assistant') {
         updatedMessages[updatedMessages.length - 1] = {
           ...lastMessage,
           content: lastMessage.content + content,
         };
       } else {
-        updatedMessages.push({ content, type: 'ai' });
+        updatedMessages.push({ content, role: 'assistant' });
       }
       return { messages: updatedMessages };
     });

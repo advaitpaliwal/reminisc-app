@@ -7,7 +7,7 @@ import { useMemories } from './useMemories';
 
 interface ChatMessage {
   content: string;
-  type: 'human' | 'ai';
+  role: 'user' | 'assistant';
 }
 
 interface UseChatReturn {
@@ -125,7 +125,7 @@ export const useChat = (): UseChatReturn => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     console.log('handleSubmit called with input:', input);
-    const newMessage: ChatMessage = { content: input, type: 'human' };
+    const newMessage: ChatMessage = { content: input, role: 'user' };
     const newMessages: ChatMessage[] = [...messages, newMessage];
     addMessage(newMessage);
     setInput('');

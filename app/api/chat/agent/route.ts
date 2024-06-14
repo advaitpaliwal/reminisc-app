@@ -4,16 +4,10 @@ import 'server-only';
 
 export const runtime = 'edge';
 
-// Define types for the request body
-interface ChatRequest {
-  input: string;
-  user_id: string;
-}
-
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const json = await req.json();
-    const { input } = json;
+    const { messages, model } = json ;
 
     const supabase = createClient();
     const userResponse = await supabase.auth.getUser();
@@ -24,8 +18,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const requestBody: ChatRequest = { input, user_id: userId };
-
     const headers = {
       'Content-Type': 'application/json',
     };
@@ -33,7 +25,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const response = await fetch(`${process.env.REMINISC_BASE_API_URL}/v0/chat`, {
       method: 'POST',
       headers: headers,
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify({
+        user_id: userId,
+        messages,
+        model,
+      }),
     });
 
     if (!response.body) {

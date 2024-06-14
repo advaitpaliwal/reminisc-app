@@ -14,6 +14,7 @@ import {
 import { CreateMemoryForm } from "../playground/CreateMemoryForm";
 import { MemoriesFieldset } from "../playground/MemoriesFieldset";
 import { PanelRightOpen } from "lucide-react";
+import { SettingsForm } from "../playground/SettingsForm";
 
 export function MemoriesSheet() {
   return (
@@ -26,7 +27,7 @@ export function MemoriesSheet() {
       <SheetContent>
         <div className="flex flex-col gap-6 w-full">
           <SheetTitle>Manage Memories</SheetTitle>
-          <CreateMemoryForm />
+          <SettingsForm />
           <MemoriesFieldset />
         </div>
       </SheetContent>

@@ -36,7 +36,7 @@ export const MemoriesFieldset: React.FC = () => {
   return (
     <fieldset className="grid gap-6 rounded-lg border p-4">
       <legend className="-ml-1 px-1 text-sm font-medium">Saved Memories</legend>
-      <ScrollArea className="h-[40vh] md:h-[60vh] rounded-md p-2">
+      <ScrollArea className="h-[40vh] md:h-[62vh] rounded-md p-2">
         {memories.length === 0 && (
           <p className="text-sm p-12">
             No memories found. Create your first one!
@@ -63,7 +63,7 @@ export const MemoriesFieldset: React.FC = () => {
               <p className="text-md">{memory.content}</p>
             )}
             <div className="flex items-center justify-between">
-              <p className="text-sm dark:text-gray-300 text-gray-700">
+              <p className="text-sm text-muted-foreground">
                 {formatTimestamp(memory.updated_at)}
               </p>
               <div className="flex gap-2">

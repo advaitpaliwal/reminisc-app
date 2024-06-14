@@ -3,6 +3,7 @@
 import { CreateMemoryForm } from "@/components/playground/CreateMemoryForm";
 import { MemoriesFieldset } from "@/components/playground/MemoriesFieldset";
 import { ChatOutput } from "@/components/playground/ChatOutput";
+import { SettingsForm } from "./SettingsForm";
 
 export const Playground = () => {
   return (
@@ -10,7 +11,7 @@ export const Playground = () => {
       <ChatOutput />
       <div className="relative hidden flex-col items-start gap-8 md:flex">
         <div className="flex flex-col gap-6 w-full min-w-600px">
-          <CreateMemoryForm />
+          <SettingsForm />
           <MemoriesFieldset />
         </div>
       </div>

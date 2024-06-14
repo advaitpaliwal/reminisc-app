@@ -85,12 +85,12 @@ export const ChatOutput = () => {
             <div
               key={index}
               className={`mb-4 flex ${
-                m.type === "human" ? "justify-end" : "justify-start"
+                m.role === "user" ? "justify-end" : "justify-start"
               }`}
             >
               <div
                 className={`rounded-lg px-4 py-2 text-lg ${
-                  m.type === "human"
+                  m.role === "user"
                     ? "bg-[#f4f4f4] dark:text-primary dark:bg-[#2f2f2f]"
                     : "bg-none"
                 }`}

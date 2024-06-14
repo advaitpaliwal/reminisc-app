@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useChatStore } from "@/stores/useChatStore";
 import { Label } from "../ui/label";
 import {
@@ -10,16 +9,24 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
+import { Textarea } from "@/components/ui/textarea";
 
 export const SettingsForm = () => {
-  const { model, setModel, temperature, setTemperature } = useChatStore();
+  const {
+    model,
+    setModel,
+    temperature,
+    setTemperature,
+    systemPrompt,
+    setSystemPrompt,
+  } = useChatStore();
 
   return (
     <fieldset className="grid gap-6 rounded-lg border p-4">
       <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
       <div className="grid gap-3">
         <Label htmlFor="model">Model</Label>
-        <Select value={model} onValueChange={setModel} defaultValue="gpt-4o">
+        <Select value={model} onValueChange={setModel}>
           <SelectTrigger id="model" className="items-start">
             <SelectValue placeholder="Select a model" />
           </SelectTrigger>
@@ -31,7 +38,7 @@ export const SettingsForm = () => {
                 </div>
               </div>
             </SelectItem>
-            <SelectItem value="gpt-4">
+            <SelectItem value="gpt-4o">
               <div className="flex items-start gap-3 text-muted-foreground">
                 <div className="grid gap-0.5">
                   <p>gpt-4o</p>
@@ -42,6 +49,16 @@ export const SettingsForm = () => {
         </Select>
       </div>
       <div className="grid gap-3">
+        <Label htmlFor="systemPrompt">System Prompt</Label>
+        <Textarea
+          id="systemPrompt"
+          value={systemPrompt}
+          onChange={(e) => setSystemPrompt(e.target.value)}
+          placeholder="Enter a system prompt..."
+          className="min-h-[4rem] resize-none"
+        />
+      </div>
+      <div className="grid gap-3 mb-3">
         <div className="flex items-center">
           <Label htmlFor="temperature">Temperature</Label>
           <span className="ml-2 text-sm text-muted-foreground">

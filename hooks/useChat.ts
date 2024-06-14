@@ -7,7 +7,7 @@ import { useMemories } from './useMemories';
 
 interface ChatMessage {
   content: string;
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
 }
 
 interface UseChatReturn {
@@ -24,7 +24,7 @@ export const useChat = (): UseChatReturn => {
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const messageEndRef = useRef<HTMLDivElement | null>(null);
-  const { messages, addMessage, updateLastAIMessage, model, temperature } = useChatStore();
+  const { messages, addMessage, updateLastAIMessage, model, temperature, systemPrompt } = useChatStore();
   const { setToastNotification } = useToastStore();
   const { memories, setMemories } = useMemoryStore();
   const { editMemory, deleteMemory } = useMemories();
@@ -32,14 +32,19 @@ export const useChat = (): UseChatReturn => {
   const fetchStream = async (newMessages: ChatMessage[]) => {
     setIsLoading(true);
     try {
-      const lastSevenMessages = newMessages.slice(-7); // Get the last 7 messages
+      const lastSevenMessages = newMessages.slice(-7);
+      const messagesWithSystemPrompt = [
+        { role: 'system', content: systemPrompt },
+        ...lastSevenMessages,
+      ];
+
       const response = await fetch('/api/chat/agent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          messages: lastSevenMessages,
+          messages: messagesWithSystemPrompt,
           model,
           temperature,
         }),

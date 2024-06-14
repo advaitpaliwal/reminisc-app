@@ -2,25 +2,30 @@ import { create } from 'zustand';
 
 interface ChatMessage {
   content: string;
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
 }
 
 interface ChatStore {
   messages: ChatMessage[];
   model: string;
   temperature: number;
+  systemPrompt: string;
   setModel: (model: string) => void;
   setTemperature: (temperature: number) => void;
+  setSystemPrompt: (prompt: string) => void;
   addMessage: (message: ChatMessage) => void;
   updateLastAIMessage: (content: string) => void;
 }
 
+
 export const useChatStore = create<ChatStore>((set) => ({
   messages: [],
-  model: 'gpt-4o',
+  model: 'gpt-3.5-turbo',
   temperature: 0.7,
+  systemPrompt: "You are Rem, a super friendly AI assistant, excited to meet a new person.",
   setModel: (model) => set({ model }),
   setTemperature: (temperature) => set({ temperature }),
+  setSystemPrompt: (prompt) => set({ systemPrompt: prompt }),
   addMessage: (message) => {
     set((state) => ({
       messages: [...state.messages, message],

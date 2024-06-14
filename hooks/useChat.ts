@@ -24,21 +24,24 @@ export const useChat = (): UseChatReturn => {
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const messageEndRef = useRef<HTMLDivElement | null>(null);
-  const { messages, addMessage, updateLastAIMessage } = useChatStore();
+  const { messages, addMessage, updateLastAIMessage, model, temperature } = useChatStore();
   const { setToastNotification } = useToastStore();
   const { memories, setMemories } = useMemoryStore();
-  const {editMemory, deleteMemory} = useMemories();
+  const { editMemory, deleteMemory } = useMemories();
 
   const fetchStream = async (newMessages: ChatMessage[]) => {
     setIsLoading(true);
     try {
+      const lastSevenMessages = newMessages.slice(-7); // Get the last 7 messages
       const response = await fetch('/api/chat/agent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          input: newMessages[newMessages.length - 1].content,
+          messages: lastSevenMessages,
+          model,
+          temperature,
         }),
       });
 
@@ -67,7 +70,7 @@ export const useChat = (): UseChatReturn => {
 
             if (parsedChunk.event === 'on_tool_end') {
               console.log('Tool end event:', parsedChunk);
-              if (parsedChunk.tool_name === 'save_memory') {
+              if (parsedChunk.tool_name === 'create_memory') {
                 console.log('Remember event:', parsedChunk);
                 const newMemory: Memory = JSON.parse(parsedChunk.output);
                 setToastNotification({

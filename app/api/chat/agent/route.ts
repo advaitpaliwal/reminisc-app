@@ -7,7 +7,7 @@ export const runtime = 'edge';
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const json = await req.json();
-    const { messages, model } = json ;
+    const { messages, model, temperature } = json ;
 
     const supabase = createClient();
     const userResponse = await supabase.auth.getUser();
@@ -29,6 +29,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         user_id: userId,
         messages,
         model,
+        temperature,
       }),
     });
 

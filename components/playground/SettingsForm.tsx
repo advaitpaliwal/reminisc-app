@@ -59,9 +59,9 @@ export const SettingsForm = () => {
         />
       </div>
       <div className="grid gap-3 mb-3">
-        <div className="flex items-center">
+        <div className="flex items-center justify-between">
           <Label htmlFor="temperature">Temperature</Label>
-          <span className="ml-2 text-sm text-muted-foreground">
+          <span className="text-sm text-muted-foreground font-medium">
             {temperature.toFixed(1)}
           </span>
         </div>

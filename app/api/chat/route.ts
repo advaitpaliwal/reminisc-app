@@ -22,7 +22,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       'Content-Type': 'application/json',
     };
 
-    const response = await fetch(`${process.env.REMINISC_BASE_API_URL}/v0/chat`, {
+    const response = await fetch(`${process.env.REMINISC_BASE_API_URL}/v0/chat/completions/create`, {
       method: 'POST',
       headers: headers,
       body: JSON.stringify({

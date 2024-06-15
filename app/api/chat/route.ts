@@ -26,9 +26,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       method: 'POST',
       headers: headers,
       body: JSON.stringify({
-        extra_body: {
-          user_id: userId,
-        },
+        user_id: userId,
         messages,
         model,
         temperature,

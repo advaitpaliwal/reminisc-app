@@ -11,6 +11,7 @@ import { ExampleMessages } from "@/components/playground/ExampleMessages";
 import { CornerDownLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ActionIndicator } from "@/components/playground/ActionIndicator";
 
 export const ChatOutput = () => {
   const {

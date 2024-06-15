@@ -4,6 +4,8 @@ import { useToastStore } from '@/stores/useToastStore';
 import { useMemoryStore } from '@/stores/useMemoryStore';
 import { Memory } from '@/types/memory';
 import { useMemories } from './useMemories';
+import { useToolStatusStore } from '@/stores/useToolStatusStore';
+import { set } from 'date-fns';
 
 interface ChatMessage {
   content: string;
@@ -28,7 +30,8 @@ export const useChat = (): UseChatReturn => {
   const { setToastNotification } = useToastStore();
   const { memories, setMemories } = useMemoryStore();
   const { editMemory, deleteMemory } = useMemories();
-
+  const { currentAction, setAction } = useToolStatusStore();
+  
   const fetchStream = async (newMessages: ChatMessage[]) => {
     setIsLoading(true);
     try {
@@ -70,20 +73,33 @@ export const useChat = (): UseChatReturn => {
 
           try {
             const parsedChunk = JSON.parse(chunk);
-
-            if (parsedChunk.event === 'on_tool_end') {
+            if (parsedChunk.event === 'on_tool_start') {
+              if (parsedChunk.tool_name === 'create_memory') {
+                const newMemory = JSON.parse(parsedChunk.input);
+                setAction({ type: 'create', title: 'Creating Memory', content: newMemory.memory, status: 'start' });
+              } else if (parsedChunk.tool_name === 'update_memory') {
+                const updatedMemory = JSON.parse(parsedChunk.input);
+                setAction({ type: 'update', title: 'Updating Memory', content: updatedMemory.new_memory, status: 'start' });
+              } else if (parsedChunk.tool_name === 'retrieve_memories') {
+                const retrievedMemories = JSON.parse(parsedChunk.input);
+                setAction({ type: 'retrieve', title: 'Retrieving Memories', content: retrievedMemories.query, status: 'start' });
+              }
+            }
+            else if (parsedChunk.event === 'on_tool_end') {
               if (parsedChunk.tool_name === 'create_memory') {
                 const newMemory: Memory = JSON.parse(parsedChunk.output);
+                setAction({ type: 'create', title: 'Memory Created', content: `Created memory: ${newMemory.content}`, status: 'end' });
                 setToastNotification({
                   message: "Memory Remembered",
                   description: newMemory.content,
                   onUndo: async () => {
-                    await deleteMemory(newMemory.id, false); // Pass false to skip toast
+                    await deleteMemory(newMemory.id, false);
                   },
                 });
                 setMemories((currentMemories: Memory[]) => [newMemory, ...currentMemories]);
               } else if (parsedChunk.tool_name === 'update_memory') {
                 const updatedMemory: Memory = JSON.parse(parsedChunk.output);
+                setAction({ type: 'update', title: 'Memory Updated', content: `Updated memory: ${updatedMemory.content}`, status: 'end' });
                 setToastNotification({
                   message: "Memory Revised",
                   description: updatedMemory.content,
@@ -100,10 +116,18 @@ export const useChat = (): UseChatReturn => {
                     memory.id === updatedMemory.id ? updatedMemory : memory
                   )
                 );
-              }                    
+              } else if (parsedChunk.tool_name === 'retrieve_memories') {
+                const retrievedMemories = JSON.parse(parsedChunk.output);
+                setAction({ type: 'retrieve', title: 'Memories Retrieved', content: `Retrieved ${retrievedMemories.length} memories`, status: 'end' });
+                setToastNotification({
+                  message: "Memories Retrieved",
+                  description: `Retrieved ${retrievedMemories.length} memories`,
+                });
+              }          
             }
 
             if (parsedChunk.event === 'on_chat_model_stream') {
+              setAction(null);
               updateLastAIMessage(parsedChunk.content);
               scrollToBottom();
             }

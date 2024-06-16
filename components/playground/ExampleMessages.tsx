@@ -1,3 +1,4 @@
+import { useUser } from "@/hooks/useUser";
 import {
   Card,
   CardContent,
@@ -19,11 +20,19 @@ interface ExampleMessagesProps {
 export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
   onMessageClick,
 }) => {
+  const { user, loading } = useUser();
+
+  const getNamePlaceholder = () => {
+    return user?.user_metadata.first_name && user?.user_metadata.last_name
+      ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
+      : "_______";
+  };
+
   const messages: ExampleMessage[] = [
     {
       title: "Name",
       description: "My name is ",
-      placeholder: "_______",
+      placeholder: getNamePlaceholder(),
     },
     {
       title: "Hobby",
@@ -38,8 +47,20 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
   ];
 
   return (
-    <div className="flex items-center justify-center h-full">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4">
+    <div className="flex flex-col items-center justify-start min-h-[60vh] p-4 mt-10">
+      <div className="text-center mb-7">
+        <p className="text-4xl font-medium mb-5">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-200 to-rose-400">
+            {loading
+              ? "Hey"
+              : `Hey, ${user?.user_metadata.first_name || "Name"}`}
+          </span>
+        </p>
+        <p className="text-xl text-muted-foreground">
+          What can I remember for you today?
+        </p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
         {messages.map((m) => (
           <Card
             key={m.title}

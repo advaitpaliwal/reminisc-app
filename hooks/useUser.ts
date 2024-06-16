@@ -1,5 +1,4 @@
 import { createClient } from "@/utils/supabase/client";
-import { redirect } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export function useUser() {
@@ -13,6 +12,7 @@ export function useUser() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      console.log(user)
       setUser(user);
       setLoading(false);
     };

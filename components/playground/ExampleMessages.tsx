@@ -23,17 +23,17 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
     {
       title: "Name",
       description: "My name is ",
-      placeholder: "Advait",
+      placeholder: "_______",
     },
     {
       title: "Hobby",
       description: "I like to ",
-      placeholder: "play the piano",
+      placeholder: "_______",
     },
     {
       title: "Major",
       description: "I am studying ",
-      placeholder: "computer science",
+      placeholder: "_______",
     },
   ];
 

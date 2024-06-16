@@ -55,7 +55,7 @@ export const SettingsForm = () => {
           value={systemPrompt}
           onChange={(e) => setSystemPrompt(e.target.value)}
           placeholder="Enter a system prompt..."
-          className="min-h-[4rem] resize-none"
+          className="min-h-[5rem] resize-none"
         />
       </div>
       <div className="grid gap-3 mb-3">

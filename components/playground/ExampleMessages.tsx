@@ -49,13 +49,6 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
   return (
     <div className="flex flex-col items-center justify-start min-h-[60vh] p-4 mt-10">
       <div className="text-center mb-7">
-        <p className="text-4xl font-medium mb-5">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-200 to-rose-400">
-            {loading
-              ? "Hey"
-              : `Hey, ${user?.user_metadata.first_name || "Name"}`}
-          </span>
-        </p>
         <p className="text-xl text-muted-foreground">
           What can I remember for you today?
         </p>

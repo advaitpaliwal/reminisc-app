@@ -175,6 +175,12 @@ export function ApiKeysTable() {
                     className="col-span-3"
                     value={editKeyName}
                     onChange={(e) => setEditKeyName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleSubmit();
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -307,6 +313,12 @@ export function ApiKeysTable() {
                   id="edit-key-name"
                   value={editKeyName}
                   onChange={(e) => setEditKeyName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleSaveEdit();
+                    }
+                  }}
                   className="col-span-3"
                 />
               </div>

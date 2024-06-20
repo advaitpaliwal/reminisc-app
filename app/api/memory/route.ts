@@ -107,7 +107,6 @@ export async function PUT(req: Request) {
 
   const headers = {
     'Content-Type': 'application/json',
-    'X-OPENAI-API-KEY': `${process.env.OPENAI_API_KEY}`,
     'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
   }
 
@@ -147,7 +146,6 @@ export async function DELETE(req: Request) {
 
   const headers = {
     'Content-Type': 'application/json',
-    'X-OPENAI-API-KEY': `${process.env.OPENAI_API_KEY}`,
     'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
   }
 

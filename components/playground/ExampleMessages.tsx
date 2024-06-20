@@ -31,8 +31,8 @@ export const ExampleMessages: React.FC<ExampleMessagesProps> = ({
   const messages: ExampleMessage[] = [
     {
       title: "Name",
-      description: "My name is ",
-      placeholder: getNamePlaceholder(),
+      description: "My name is " + getNamePlaceholder(),
+      placeholder: "",
     },
     {
       title: "Hobby",

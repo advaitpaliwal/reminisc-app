@@ -129,6 +129,7 @@ export const useChat = (): UseChatReturn => {
             if (parsedChunk.event === 'on_chat_model_stream') {
               setAction(null);
               updateLastAIMessage(parsedChunk.content);
+              scrollToBottom();
             }
           } catch (error) {
             console.error('Error parsing chunk:', error);
@@ -142,6 +143,7 @@ export const useChat = (): UseChatReturn => {
           const parsedChunk = JSON.parse(buffer);
           if (parsedChunk.event === 'on_chat_model_stream') {
             updateLastAIMessage(parsedChunk.content);
+            scrollToBottom();
           }
         } catch (error) {
           console.error('Error parsing remaining chunk:', error);
@@ -160,6 +162,7 @@ export const useChat = (): UseChatReturn => {
     const newMessages: ChatMessage[] = [...messages, newMessage];
     addMessage(newMessage);
     setInput('');
+    scrollToBottom();
     await fetchStream(newMessages);
   };
 

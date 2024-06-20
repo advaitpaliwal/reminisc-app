@@ -22,7 +22,7 @@ export const SettingsForm = () => {
   } = useChatStore();
 
   return (
-    <fieldset className="grid gap-6 rounded-lg border p-4">
+    <fieldset className="grid gap-6 rounded-lg border p-4 flex-1">
       <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
       <div className="grid gap-3">
         <Label htmlFor="model">Model</Label>

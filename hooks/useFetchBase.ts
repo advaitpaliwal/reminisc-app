@@ -9,12 +9,10 @@ const useFetchBase = () => {
     const fetchData = async () => {
       const baseUrl = process.env.NEXT_PUBLIC_REMINISC_BASE_API_URL;
       try {
-        console.log("baseUrl", baseUrl)
         const response = await fetch(`${baseUrl}/`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        console.log("response", response)
         const data = await response.json();
         setData(data);
       } catch (error) {

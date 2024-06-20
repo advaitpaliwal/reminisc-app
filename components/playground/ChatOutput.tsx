@@ -29,7 +29,6 @@ export const ChatOutput = () => {
 
   useEffect(() => {
     if (toastNotification) {
-      console.log("Toast Notification", toastNotification);
       toast.info(toastNotification.message, {
         description: toastNotification.description,
         action: toastNotification.onUndo

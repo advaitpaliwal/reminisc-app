@@ -3,7 +3,7 @@ import 'server-only';
 
 export const runtime = 'edge';
 
-const apiUrl = `${process.env.REMINISC_BASE_API_URL}/v0/memory`;
+const apiUrl = `${process.env.NEXT_PUBLIC_REMINISC_BASE_API_URL}/v0/memory`;
 
 export async function GET(req: Request) {
  
@@ -64,7 +64,6 @@ export async function POST(req: Request) {
 
   const headers = {
     'Content-Type': 'application/json',
-    'X-OPENAI-API-KEY': `${process.env.OPENAI_API_KEY}`,
     'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
   }
 

@@ -3,7 +3,7 @@ import 'server-only';
 
 export const runtime = 'edge';
 
-const apiUrl = `${process.env.REMINISC_BASE_API_URL}/v0/key`;
+const apiUrl = `${process.env.NEXT_PUBLIC_REMINISC_BASE_API_URL}/v0/key`;
 
 export async function GET(req: Request) {
   const supabase = createClient();

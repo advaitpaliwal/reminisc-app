@@ -11,7 +11,7 @@ import { ExampleMessages } from "@/components/playground/ExampleMessages";
 import { CornerDownLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ActionIndicator } from "@/components/playground/ActionIndicator";
+import ReactMarkdown from "react-markdown";
 
 export const ChatOutput = () => {
   const {
@@ -95,7 +95,54 @@ export const ChatOutput = () => {
                     : "bg-none"
                 }`}
               >
-                {m.content}
+                <ReactMarkdown
+                  components={{
+                    p: ({ node, ...props }) => (
+                      <p className="mb-2" {...props} />
+                    ),
+                    h1: ({ node, ...props }) => (
+                      <h1 className="text-2xl font-bold mb-2" {...props} />
+                    ),
+                    h2: ({ node, ...props }) => (
+                      <h2 className="text-xl font-bold mb-2" {...props} />
+                    ),
+                    h3: ({ node, ...props }) => (
+                      <h3 className="text-lg font-bold mb-2" {...props} />
+                    ),
+                    ul: ({ node, ...props }) => (
+                      <ul className="list-disc list-inside mb-2" {...props} />
+                    ),
+                    ol: ({ node, ...props }) => (
+                      <ol
+                        className="list-decimal list-inside mb-2"
+                        {...props}
+                      />
+                    ),
+                    li: ({ node, ...props }) => (
+                      <li className="mb-1" {...props} />
+                    ),
+                    code: ({ node, ...props }) => (
+                      <code
+                        className="block bg-gray-300 dark:bg-gray-800 rounded p-2 my-2 overflow-x-auto"
+                        {...props}
+                      />
+                    ),
+                    pre: ({ node, ...props }) => (
+                      <pre
+                        className="bg-gray-300 dark:bg-gray-800 rounded p-2 my-2 overflow-x-auto"
+                        {...props}
+                      />
+                    ),
+                    blockquote: ({ node, ...props }) => (
+                      <blockquote
+                        className="border-l-4 border-gray-300 pl-4 italic my-2"
+                        {...props}
+                      />
+                    ),
+                  }}
+                >
+                  {m.content}
+                </ReactMarkdown>
               </div>
             </div>
           ))}

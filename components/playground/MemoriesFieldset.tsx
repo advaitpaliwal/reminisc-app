@@ -35,7 +35,10 @@ export const MemoriesFieldset: React.FC = () => {
 
   return (
     <fieldset className="grid gap-6 rounded-lg border p-4 min-h-[30vh] flex-1 overflow-hidden">
-      <legend className="-ml-1 px-1 text-sm font-medium">Saved Memories</legend>
+      <legend className="-ml-1 px-1 text-sm font-medium">
+        Saved Memories{" "}
+        <span className="text-muted-foreground">({memories.length})</span>
+      </legend>
       <ScrollArea className="h-full rounded-md p-2">
         {memories.length === 0 && (
           <p className="text-sm p-12">

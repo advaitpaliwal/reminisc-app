@@ -89,7 +89,7 @@ export const ChatOutput = () => {
               }`}
             >
               <div
-                className={`rounded-lg px-4 py-2 text-lg ${
+                className={`rounded-lg px-4 py-2 text-sm md:text-base max-w-[80%] md:max-w-[70%] ${
                   m.role === "user"
                     ? "bg-[#f4f4f4] dark:text-primary dark:bg-[#2f2f2f]"
                     : "bg-none"
@@ -98,38 +98,50 @@ export const ChatOutput = () => {
                 <ReactMarkdown
                   components={{
                     p: ({ node, ...props }) => (
-                      <p className="mb-2" {...props} />
+                      <p className="mb-2 break-words" {...props} />
                     ),
                     h1: ({ node, ...props }) => (
-                      <h1 className="text-2xl font-bold mb-2" {...props} />
+                      <h1
+                        className="text-xl md:text-2xl font-bold mb-2"
+                        {...props}
+                      />
                     ),
                     h2: ({ node, ...props }) => (
-                      <h2 className="text-xl font-bold mb-2" {...props} />
+                      <h2
+                        className="text-lg md:text-xl font-bold mb-2"
+                        {...props}
+                      />
                     ),
                     h3: ({ node, ...props }) => (
-                      <h3 className="text-lg font-bold mb-2" {...props} />
+                      <h3
+                        className="text-base md:text-lg font-bold mb-2"
+                        {...props}
+                      />
                     ),
                     ul: ({ node, ...props }) => (
-                      <ul className="list-disc list-inside mb-2" {...props} />
+                      <ul
+                        className="list-disc list-inside mb-2 pl-4"
+                        {...props}
+                      />
                     ),
                     ol: ({ node, ...props }) => (
                       <ol
-                        className="list-decimal list-inside mb-2"
+                        className="list-decimal list-inside mb-2 pl-4"
                         {...props}
                       />
                     ),
                     li: ({ node, ...props }) => (
-                      <li className="mb-1" {...props} />
+                      <li className="mb-1 break-words" {...props} />
                     ),
                     code: ({ node, ...props }) => (
                       <code
-                        className="block bg-gray-300 dark:bg-gray-800 rounded p-2 my-2 overflow-x-auto"
+                        className="block bg-gray-200 dark:bg-gray-700 rounded p-2 my-2 overflow-x-auto text-xs md:text-sm"
                         {...props}
                       />
                     ),
                     pre: ({ node, ...props }) => (
                       <pre
-                        className="bg-gray-300 dark:bg-gray-800 rounded p-2 my-2 overflow-x-auto"
+                        className="bg-gray-200 dark:bg-gray-700 rounded p-2 my-2 overflow-x-auto text-xs md:text-sm"
                         {...props}
                       />
                     ),

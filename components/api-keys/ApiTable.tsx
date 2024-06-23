@@ -50,6 +50,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { format, parseISO } from "date-fns";
+
+const formatTimestamp = (timestamp: string) => {
+  if (timestamp === null) {
+    return timestamp;
+  }
+  return format(parseISO(timestamp), "MM/dd/yy h:mm:ss a");
+};
 
 export function ApiKeysTable() {
   const [isMobile, setIsMobile] = useState(false);
@@ -211,9 +219,13 @@ export function ApiKeysTable() {
                   <TableRow key={key.id}>
                     <TableCell>{formatName(key.name)}</TableCell>
                     <TableCell>{formatKey(key.secret_key)}</TableCell>
-                    {!isMobile && <TableCell>{key.created_at}</TableCell>}
                     {!isMobile && (
-                      <TableCell>{key.last_used_at || "Unused"}</TableCell>
+                      <TableCell>{formatTimestamp(key.created_at)}</TableCell>
+                    )}
+                    {!isMobile && (
+                      <TableCell>
+                        {formatTimestamp(key.last_used_at) || "Unused"}
+                      </TableCell>
                     )}
                     <TableCell>
                       <DropdownMenu>

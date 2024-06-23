@@ -86,15 +86,25 @@ export function ApiKeysTable() {
   };
 
   const handleSubmit = async () => {
-    let name = editKeyName.trim();
-    if (!name) {
-      name = getKeyName();
+    if (apiKeys.length > 0) {
+      toast.error("You are limited to one API key per account.");
+      setCreateKeyDialogOpen(false);
+      return;
     }
-    await createApiKey(name);
-    toast.success("API key created successfully.");
-    setEditKeyName("");
-    setCreateKeyDialogOpen(false);
-    setShowSaveKeyDialog(true);
+
+    try {
+      let name = editKeyName.trim();
+      if (!name) {
+        name = getKeyName();
+      }
+      await createApiKey(name);
+      toast.success("API key created successfully.");
+      setEditKeyName("");
+      setCreateKeyDialogOpen(false);
+      setShowSaveKeyDialog(true);
+    } catch (error: any) {
+      toast.error("Failed to create API key: " + error.message);
+    }
   };
 
   const handleCopy = (key: string) => {

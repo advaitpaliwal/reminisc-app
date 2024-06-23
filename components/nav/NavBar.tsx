@@ -120,7 +120,7 @@ export const NavBar: React.FC<NavBarProps> = ({ className }) => {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href="https://api.reminisc.ai/docs" target="_blank">
+            <Link href="https://docs.reminisc.ai/" target="_blank">
               <Button
                 variant="ghost"
                 size="icon"

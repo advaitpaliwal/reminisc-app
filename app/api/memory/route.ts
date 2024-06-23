@@ -19,7 +19,7 @@ export async function GET(req: Request) {
 
   const headers = {
     'Content-Type': 'application/json',
-    'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
+    'x-reminisc-api-key': `${process.env.REMINISC_API_KEY}`,
   };
 
   try {
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
 
   const headers = {
     'Content-Type': 'application/json',
-    'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
+    'x-reminisc-api-key': `${process.env.REMINISC_API_KEY}`,
   }
 
   try {
@@ -106,7 +106,7 @@ export async function PUT(req: Request) {
 
   const headers = {
     'Content-Type': 'application/json',
-    'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
+    'x-reminisc-api-key': `${process.env.REMINISC_API_KEY}`,
   }
 
   try {
@@ -145,7 +145,7 @@ export async function DELETE(req: Request) {
 
   const headers = {
     'Content-Type': 'application/json',
-    'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
+    'x-reminisc-api-key': `${process.env.REMINISC_API_KEY}`,
   }
 
   try {

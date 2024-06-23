@@ -20,7 +20,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const headers = {
       'Content-Type': 'application/json',
-      'X-REMINISC-API-KEY': `${process.env.REMINISC_API_KEY}`,
+      'x-reminisc-api-key': `${process.env.REMINISC_API_KEY}`,
     };
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_REMINISC_BASE_API_URL}/v0/chat/completions`, {

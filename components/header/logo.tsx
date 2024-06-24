@@ -20,10 +20,10 @@ const ReminiscLogo = ({ height, width, className }: LogoProps) => {
           className="flex items-center space-x-2 dark:hidden"
         >
           <Image
-            src="/reminiscDark.png"
+            src="/reminisc-light.png"
             alt="ReminiscLogo"
-            width={width || 32}
-            height={height || 32}
+            width={width || 24}
+            height={height || 24}
             unoptimized
           />
         </Link>
@@ -33,10 +33,10 @@ const ReminiscLogo = ({ height, width, className }: LogoProps) => {
           className="hidden items-center space-x-2 dark:flex"
         >
           <Image
-            src="/reminiscLight.png"
+            src="/reminisc-dark.png"
             alt="ReminiscLogo"
-            width={width || 32}
-            height={height || 32}
+            width={width || 24}
+            height={height || 24}
             unoptimized
           />
         </Link>

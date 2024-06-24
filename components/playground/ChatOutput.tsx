@@ -89,7 +89,7 @@ export const ChatOutput = () => {
               }`}
             >
               <div
-                className={`rounded-lg px-4 py-2 text-sm md:text-base max-w-[80%] md:max-w-[70%] ${
+                className={`rounded-lg px-4 pt-2 text-sm md:text-base max-w-[80%] md:max-w-[70%] ${
                   m.role === "user"
                     ? "bg-[#f4f4f4] dark:text-primary dark:bg-[#2f2f2f]"
                     : "bg-none"

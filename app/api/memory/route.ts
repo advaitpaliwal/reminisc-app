@@ -20,6 +20,7 @@ export async function GET(req: Request) {
   const headers = {
     'Content-Type': 'application/json',
     'x-reminisc-api-key': `${process.env.REMINISC_API_KEY}`,
+    'x-openai-api-key': `${process.env.OPENAI_API_KEY}`,
   };
 
   try {
@@ -148,6 +149,7 @@ export async function DELETE(req: Request) {
   const headers = {
     'Content-Type': 'application/json',
     'x-reminisc-api-key': `${process.env.REMINISC_API_KEY}`,
+    'x-openai-api-key': `${process.env.OPENAI_API_KEY}`,
   }
 
   try {

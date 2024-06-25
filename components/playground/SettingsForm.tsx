@@ -1,4 +1,4 @@
-import { useChatStore } from "@/stores/useChatStore";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 import { Label } from "../ui/label";
 import {
   Select,
@@ -19,7 +19,7 @@ export const SettingsForm = () => {
     setTemperature,
     systemPrompt,
     setSystemPrompt,
-  } = useChatStore();
+  } = useSettingsStore();
 
   return (
     <fieldset className="grid gap-6 rounded-lg border p-4 flex-1">
@@ -68,7 +68,7 @@ export const SettingsForm = () => {
         <Slider
           value={[temperature]}
           min={0}
-          max={2}
+          max={1.5}
           step={0.1}
           className={cn("w-full")}
           onValueChange={(value) => setTemperature(value[0])}

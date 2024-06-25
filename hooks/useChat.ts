@@ -1,5 +1,5 @@
 import { useState, useRef, FormEvent } from 'react';
-import { useChatStore } from '@/stores/useChatStore';
+import { useSettingsStore } from '@/stores/useSettingsStore';
 import { useToastStore } from '@/stores/useToastStore';
 import { useMemoryStore } from '@/stores/useMemoryStore';
 import { Memory } from '@/types/memory';
@@ -26,7 +26,7 @@ export const useChat = (): UseChatReturn => {
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const messageEndRef = useRef<HTMLDivElement | null>(null);
-  const { messages, addMessage, updateLastAIMessage, model, temperature, systemPrompt } = useChatStore();
+  const { messages, addMessage, updateLastAIMessage, model, temperature, systemPrompt } = useSettingsStore();
   const { setToastNotification } = useToastStore();
   const { memories, setMemories } = useMemoryStore();
   const { editMemory, deleteMemory } = useMemories();

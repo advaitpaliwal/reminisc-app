@@ -1,4 +1,4 @@
-import { useSettingsStore } from "@/stores/useSettingsStore";
+import { useChatStore } from "@/stores/useChatStore";
 import { Label } from "../ui/label";
 import {
   Select,
@@ -19,7 +19,7 @@ export const SettingsForm = () => {
     setTemperature,
     systemPrompt,
     setSystemPrompt,
-  } = useSettingsStore();
+  } = useChatStore();
 
   return (
     <fieldset className="grid gap-6 rounded-lg border p-4 flex-1">

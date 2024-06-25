@@ -8,7 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { TypingIndicator } from "@/components/playground/TypingIndicator";
 import { ExampleMessages } from "@/components/playground/ExampleMessages";
-import { CornerDownLeft } from "lucide-react";
+import { CornerDownLeft, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import ReactMarkdown from "react-markdown";
@@ -21,11 +21,13 @@ export const ChatOutput = () => {
     handleSubmit,
     isLoading: chatEndpointIsLoading,
     messageEndRef,
+    clearMessages,
   } = useChat();
 
   const { toastNotification, setToastNotification } = useToastStore();
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (toastNotification) {
@@ -68,10 +70,13 @@ export const ChatOutput = () => {
   };
 
   return (
-    <div className="p-4 box-border relative flex flex-col h-[80vh] md:h-[90vh] rounded-xl bg-muted/50 lg:col-span-2">
-      <ScrollArea className="flex-1 rounded-md overflow-auto p-2">
+    <div className="p-2 box-border relative flex flex-col h-[80vh] md:h-[90vh] rounded-xl bg-muted/50 lg:col-span-2">
+      <ScrollArea
+        className="flex-1 rounded-md overflow-auto p-4"
+        ref={scrollAreaRef}
+      >
         <div className="flex flex-col h-full">
-          {messages.length === 0 && (
+          {messages.length === 0 ? (
             <div className="flex-grow flex items-center justify-center">
               <ExampleMessages
                 onMessageClick={(description: string) => {
@@ -80,94 +85,118 @@ export const ChatOutput = () => {
                 }}
               />
             </div>
-          )}
-          {messages.map((m, index) => (
-            <div
-              key={index}
-              className={`mb-4 flex ${
-                m.role === "user" ? "justify-end" : "justify-start"
-              }`}
-            >
-              <div
-                className={`rounded-lg px-4 pt-2 text-sm md:text-base max-w-[80%] md:max-w-[70%] ${
-                  m.role === "user"
-                    ? "bg-[#f4f4f4] dark:text-primary dark:bg-[#2f2f2f]"
-                    : "bg-none"
-                }`}
-              >
-                <ReactMarkdown
-                  components={{
-                    p: ({ node, ...props }) => (
-                      <p className="mb-2 break-words" {...props} />
-                    ),
-                    h1: ({ node, ...props }) => (
-                      <h1
-                        className="text-xl md:text-2xl font-bold mb-2"
-                        {...props}
-                      />
-                    ),
-                    h2: ({ node, ...props }) => (
-                      <h2
-                        className="text-lg md:text-xl font-bold mb-2"
-                        {...props}
-                      />
-                    ),
-                    h3: ({ node, ...props }) => (
-                      <h3
-                        className="text-base md:text-lg font-bold mb-2"
-                        {...props}
-                      />
-                    ),
-                    ul: ({ node, ...props }) => (
-                      <ul
-                        className="list-disc list-inside mb-2 pl-4"
-                        {...props}
-                      />
-                    ),
-                    ol: ({ node, ...props }) => (
-                      <ol
-                        className="list-decimal list-inside mb-2 pl-4"
-                        {...props}
-                      />
-                    ),
-                    li: ({ node, ...props }) => (
-                      <li className="mb-1 break-words" {...props} />
-                    ),
-                    code: ({ node, ...props }) => (
-                      <code
-                        className="block bg-gray-200 dark:bg-gray-700 rounded p-2 my-2 overflow-x-auto text-xs md:text-sm"
-                        {...props}
-                      />
-                    ),
-                    pre: ({ node, ...props }) => (
-                      <pre
-                        className="bg-gray-200 dark:bg-gray-700 rounded p-2 my-2 overflow-x-auto text-xs md:text-sm"
-                        {...props}
-                      />
-                    ),
-                    blockquote: ({ node, ...props }) => (
-                      <blockquote
-                        className="border-l-4 border-gray-300 pl-4 italic my-2"
-                        {...props}
-                      />
-                    ),
-                  }}
+          ) : (
+            <>
+              {messages.map((m, index) => (
+                <div
+                  key={index}
+                  className={`mb-4 flex ${
+                    m.role === "user" ? "justify-end" : "justify-start"
+                  }`}
                 >
-                  {m.content}
-                </ReactMarkdown>
-              </div>
-            </div>
-          ))}
-          {chatEndpointIsLoading && <TypingIndicator />}
-          <div ref={messageEndRef} />
+                  <div
+                    className={`rounded-lg px-4 pt-2 text-sm md:text-base max-w-[80%] md:max-w-[70%] ${
+                      m.role === "user"
+                        ? "bg-[#f4f4f4] dark:text-primary dark:bg-[#2f2f2f]"
+                        : "bg-none"
+                    }`}
+                  >
+                    <ReactMarkdown
+                      components={{
+                        p: ({ node, ...props }) => (
+                          <p className="mb-2 break-words" {...props} />
+                        ),
+                        h1: ({ node, ...props }) => (
+                          <h1
+                            className="text-xl md:text-2xl font-bold mb-2"
+                            {...props}
+                          />
+                        ),
+                        h2: ({ node, ...props }) => (
+                          <h2
+                            className="text-lg md:text-xl font-bold mb-2"
+                            {...props}
+                          />
+                        ),
+                        h3: ({ node, ...props }) => (
+                          <h3
+                            className="text-base md:text-lg font-bold mb-2"
+                            {...props}
+                          />
+                        ),
+                        ul: ({ node, ...props }) => (
+                          <ul
+                            className="list-disc list-inside mb-2 pl-4"
+                            {...props}
+                          />
+                        ),
+                        ol: ({ node, ...props }) => (
+                          <ol
+                            className="list-decimal list-inside mb-2 pl-4"
+                            {...props}
+                          />
+                        ),
+                        li: ({ node, ...props }) => (
+                          <li className="mb-1 break-words" {...props} />
+                        ),
+                        code: ({ node, ...props }) => (
+                          <code
+                            className="block bg-gray-200 dark:bg-gray-700 rounded p-2 my-2 overflow-x-auto text-xs md:text-sm"
+                            {...props}
+                          />
+                        ),
+                        pre: ({ node, ...props }) => (
+                          <pre
+                            className="bg-gray-200 dark:bg-gray-700 rounded p-2 my-2 overflow-x-auto text-xs md:text-sm"
+                            {...props}
+                          />
+                        ),
+                        blockquote: ({ node, ...props }) => (
+                          <blockquote
+                            className="border-l-4 border-gray-300 pl-4 italic my-2"
+                            {...props}
+                          />
+                        ),
+                        hr: ({ node, ...props }) => (
+                          <hr
+                            className="my-4 border-t border-gray-300 dark:border-gray-700"
+                            {...props}
+                          />
+                        ),
+                      }}
+                    >
+                      {m.content}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              ))}
+              {chatEndpointIsLoading && <TypingIndicator />}
+              <div ref={messageEndRef} />
+            </>
+          )}
         </div>
       </ScrollArea>
+
+      {messages.length > 0 && !chatEndpointIsLoading && (
+        <div className="flex justify-end mb-2">
+          <Button
+            onClick={clearMessages}
+            variant="ghost"
+            size="sm"
+            className="flex items-center text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Clear history
+          </Button>
+        </div>
+      )}
+
       <Label htmlFor="Output" className="sr-only">
         Output
       </Label>
 
       <form
-        className="mt-auto relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring flex items-center p-4"
+        className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring flex items-center p-4"
         onSubmit={handleChatSubmit}
       >
         <Label htmlFor="message" className="sr-only">

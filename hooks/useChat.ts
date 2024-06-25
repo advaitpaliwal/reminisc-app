@@ -1,5 +1,5 @@
 import { useState, useRef, FormEvent } from 'react';
-import { useSettingsStore } from '@/stores/useSettingsStore';
+import { useChatStore } from '@/stores/useChatStore';
 import { useToastStore } from '@/stores/useToastStore';
 import { useMemoryStore } from '@/stores/useMemoryStore';
 import { Memory } from '@/types/memory';
@@ -20,13 +20,14 @@ interface UseChatReturn {
   handleSubmit: (e: FormEvent) => Promise<void>;
   messageEndRef: React.RefObject<HTMLDivElement>;
   scrollToBottom: () => void;
+  clearMessages: () => void;
 }
 
 export const useChat = (): UseChatReturn => {
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const messageEndRef = useRef<HTMLDivElement | null>(null);
-  const { messages, addMessage, updateLastAIMessage, model, temperature, systemPrompt } = useSettingsStore();
+  const { messages, addMessage, updateLastAIMessage, model, temperature, systemPrompt, clearMessages: clearChatStoreMessages } = useChatStore();
   const { setToastNotification } = useToastStore();
   const { memories, setMemories } = useMemoryStore();
   const { editMemory, deleteMemory } = useMemories();
@@ -166,9 +167,19 @@ export const useChat = (): UseChatReturn => {
     await fetchStream(newMessages);
   };
 
+  const clearMessages = () => {
+    clearChatStoreMessages();  // This clears messages in the chat store
+    setToastNotification({
+      message: "Chat history cleared",
+      description: "All messages have been removed from the chat.",
+    });
+  }
+
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+
 
   return {
     input,
@@ -178,5 +189,6 @@ export const useChat = (): UseChatReturn => {
     handleSubmit,
     messageEndRef,
     scrollToBottom,
+    clearMessages
   };
 };

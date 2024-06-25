@@ -68,7 +68,7 @@ export const SettingsForm = () => {
         <Slider
           value={[temperature]}
           min={0}
-          max={1}
+          max={2}
           step={0.1}
           className={cn("w-full")}
           onValueChange={(value) => setTemperature(value[0])}

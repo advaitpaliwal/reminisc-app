@@ -59,7 +59,7 @@ export const MemoriesFieldset: React.FC = () => {
           </>
         ) : error ? (
           <p className="text-sm p-12 text-red-500">
-            Error loading memories. Please try again later.
+            Error loading memories. Refresh to try again.
           </p>
         ) : memories.length === 0 ? (
           <p className="text-sm p-12">

@@ -32,9 +32,27 @@ export const useChatStore = create<ChatStore>()(
       setModel: (model) => set({ model }),
       setTemperature: (temperature) => set({ temperature }),
       setSystemPrompt: (prompt) => set({ systemPrompt: prompt }),
-      addMessage: (message) => set((state) => ({
-        messages: [...state.messages, message],
-      })),
+      addMessage: (message) => set((state) => {
+        let updatedMessages = [...state.messages];
+        
+        if (message.role === 'user') {
+          // If the last message was from a user, remove it
+          if (updatedMessages.length > 0 && updatedMessages[updatedMessages.length - 1].role === 'user') {
+            updatedMessages.pop();
+          }
+          updatedMessages.push(message);
+        } else if (message.role === 'assistant') {
+          // Only add the assistant message if there's a preceding user message
+          if (updatedMessages.length > 0 && updatedMessages[updatedMessages.length - 1].role === 'user') {
+            updatedMessages.push(message);
+          } else {
+            // If there's no preceding user message, don't add this assistant message
+            return { messages: updatedMessages };
+          }
+        }
+        
+        return { messages: updatedMessages };
+      }),
       updateLastAIMessage: (content) => set((state) => {
         const updatedMessages = [...state.messages];
         const lastMessage = updatedMessages[updatedMessages.length - 1];
@@ -44,7 +62,10 @@ export const useChatStore = create<ChatStore>()(
             content: lastMessage.content + content,
           };
         } else {
-          updatedMessages.push({ content, role: 'assistant' });
+          // Don't add a new assistant message if there's no preceding user message
+          if (updatedMessages.length > 0 && updatedMessages[updatedMessages.length - 1].role === 'user') {
+            updatedMessages.push({ content, role: 'assistant' });
+          }
         }
         return { messages: updatedMessages };
       }),

@@ -32,6 +32,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         messages,
         model,
         temperature,
+        stream: true,
       }),
     });
 

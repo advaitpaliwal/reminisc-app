@@ -53,8 +53,8 @@ import { toast } from "sonner";
 import { format, parseISO } from "date-fns";
 
 const formatTimestamp = (timestamp: string) => {
-  if (timestamp === null) {
-    return timestamp;
+  if (!timestamp) {
+    return null;
   }
   return format(parseISO(timestamp), "MM/dd/yy h:mm:ss a");
 };

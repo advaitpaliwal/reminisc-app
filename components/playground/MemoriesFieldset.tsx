@@ -10,6 +10,9 @@ import { parseISO, format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const formatTimestamp = (timestamp: string) => {
+  if (!timestamp) {
+    return null;
+  }
   return format(parseISO(timestamp), "MM/dd/yy h:mm a");
 };
 
@@ -54,9 +57,7 @@ export const MemoriesFieldset: React.FC = () => {
       </legend>
       <ScrollArea className="h-full rounded-md p-2">
         {isLoading ? (
-          <>
-            <MemorySkeleton />
-          </>
+          <MemorySkeleton />
         ) : error ? (
           <p className="text-sm p-12 text-red-500">
             Error loading memories. Refresh to try again.
@@ -66,56 +67,65 @@ export const MemoriesFieldset: React.FC = () => {
             No memories found. Create your first one!
           </p>
         ) : (
-          memories.map((memory) => (
-            <div key={memory.id} className="grid gap-2">
-              {editingMemoryId === memory.id ? (
-                <form
-                  onSubmit={(e) =>
-                    handleEditMemory(
-                      e,
-                      memory.id,
-                      e.currentTarget.content.value
-                    )
-                  }
-                  className="grid gap-2"
-                >
-                  <Textarea
-                    id="content"
-                    defaultValue={memory.content}
-                    placeholder="Enter a memory..."
-                    className="min-h-[4rem] resize-none"
-                  />
-                  <Button type="submit">Save</Button>
-                </form>
-              ) : (
-                <p className="text-md">{memory.content}</p>
-              )}
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">
-                  {formatTimestamp(memory.updated_at)}
-                </p>
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setEditingMemoryId(memory.id)}
-                  >
-                    <Edit className="size-4" />
-                    <span className="sr-only">Edit Memory</span>
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDeleteMemory(memory.id)}
-                  >
-                    <Trash className="size-4" />
-                    <span className="sr-only">Delete Memory</span>
-                  </Button>
+          memories.map(
+            (memory) =>
+              memory.id && (
+                <div key={memory.id} className="grid gap-2">
+                  {editingMemoryId === memory.id ? (
+                    <form
+                      onSubmit={(e) =>
+                        handleEditMemory(
+                          e,
+                          memory.id,
+                          (
+                            e.currentTarget.elements.namedItem(
+                              "content"
+                            ) as HTMLTextAreaElement
+                          ).value
+                        )
+                      }
+                      className="grid gap-2"
+                    >
+                      <Textarea
+                        id="content"
+                        name="content"
+                        defaultValue={memory.content}
+                        placeholder="Enter a memory..."
+                        className="min-h-[4rem] resize-none"
+                      />
+                      <Button type="submit">Save</Button>
+                    </form>
+                  ) : (
+                    <p className="text-md">{memory.content}</p>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-muted-foreground">
+                      {formatTimestamp(memory.updated_at) ||
+                        formatTimestamp(memory.created_at)}
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setEditingMemoryId(memory.id)}
+                      >
+                        <Edit className="size-4" />
+                        <span className="sr-only">Edit Memory</span>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteMemory(memory.id)}
+                      >
+                        <Trash className="size-4" />
+                        <span className="sr-only">Delete Memory</span>
+                      </Button>
+                    </div>
+                  </div>
+                  <Separator className="my-1" />
                 </div>
-              </div>
-              <Separator className="my-1" />
-            </div>
-          ))
+              )
+          )
         )}
       </ScrollArea>
     </fieldset>

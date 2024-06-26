@@ -5,7 +5,6 @@ import { useMemoryStore } from '@/stores/useMemoryStore';
 import { Memory } from '@/types/memory';
 import { useMemories } from './useMemories';
 import { useToolStatusStore } from '@/stores/useToolStatusStore';
-import { set } from 'date-fns';
 
 interface ChatMessage {
   content: string;
@@ -31,7 +30,7 @@ export const useChat = (): UseChatReturn => {
   const { setToastNotification } = useToastStore();
   const { memories, setMemories } = useMemoryStore();
   const { editMemory, deleteMemory } = useMemories();
-  const { currentAction, setAction } = useToolStatusStore();
+  const { setAction } = useToolStatusStore();
   
   const fetchStream = async (newMessages: ChatMessage[]) => {
     setIsLoading(true);
@@ -74,19 +73,18 @@ export const useChat = (): UseChatReturn => {
 
           try {
             const parsedChunk = JSON.parse(chunk);
-            if (parsedChunk.event === 'on_tool_start') {
-              if (parsedChunk.tool_name === 'create_memory') {
-                const newMemory = JSON.parse(parsedChunk.input);
-                setAction({ type: 'create', title: 'Creating Memory', content: newMemory.memory, status: 'start' });
-              } else if (parsedChunk.tool_name === 'update_memory') {
-                const updatedMemory = JSON.parse(parsedChunk.input);
-                setAction({ type: 'update', title: 'Updating Memory', content: updatedMemory.new_memory, status: 'start' });
-              } else if (parsedChunk.tool_name === 'retrieve_memories') {
-                const retrievedMemories = JSON.parse(parsedChunk.input);
-                setAction({ type: 'retrieve', title: 'Retrieving Memories', content: retrievedMemories.query, status: 'start' });
-              }
-            }
-            else if (parsedChunk.event === 'on_tool_end') {
+            // if (parsedChunk.event === 'on_tool_start') {
+            //   const memoryInput = JSON.parse(parsedChunk.input);
+            //   console.log('memoryInput:', memoryInput);
+            //   if (parsedChunk.tool_name === 'create_memory') {
+            //     setAction({ type: 'create', title: 'Creating Memory', content: memoryInput.memory, status: 'start' });
+            //   } else if (parsedChunk.tool_name === 'update_memory') {
+            //     setAction({ type: 'update', title: 'Updating Memory', content: memoryInput.new_memory, status: 'start' });
+            //   } else if (parsedChunk.tool_name === 'retrieve_memories') {
+            //     setAction({ type: 'retrieve', title: 'Retrieving Memories', content: memoryInput.query, status: 'start' });
+            //   }
+            // }
+            if (parsedChunk.event === 'on_tool_end') {
               if (parsedChunk.tool_name === 'create_memory') {
                 const newMemory: Memory = JSON.parse(parsedChunk.output);
                 setAction({ type: 'create', title: 'Memory Created', content: `Created memory: ${newMemory.content}`, status: 'end' });

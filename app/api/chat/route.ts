@@ -24,7 +24,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       'x-openai-api-key': `${process.env.OPENAI_API_KEY}`,
     };
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_REMINISC_BASE_API_URL}/v0/chat/completions`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_REMINISC_BASE_API_URL}/v0/chat/`, {
       method: 'POST',
       headers: headers,
       body: JSON.stringify({

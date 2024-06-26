@@ -85,8 +85,11 @@ export const useChat = (): UseChatReturn => {
             //   }
             // }
             if (parsedChunk.event === 'on_tool_end') {
+              console.log('parsedChunk:', parsedChunk, 'parsedChunk.type:', typeof parsedChunk);
+              const toolOutput = JSON.parse(parsedChunk.output);
               if (parsedChunk.tool_name === 'create_memory') {
-                const newMemory: Memory = JSON.parse(parsedChunk.output);
+                const newMemory:Memory = JSON.parse(toolOutput);
+                console.log("newMemory:", newMemory, "newMemory.type:", typeof newMemory, "newMemory.content:", newMemory.content)
                 setAction({ type: 'create', title: 'Memory Created', content: `Created memory: ${newMemory.content}`, status: 'end' });
                 setToastNotification({
                   message: "Memory Remembered",
@@ -97,7 +100,7 @@ export const useChat = (): UseChatReturn => {
                 });
                 setMemories((currentMemories: Memory[]) => [newMemory, ...currentMemories]);
               } else if (parsedChunk.tool_name === 'update_memory') {
-                const updatedMemory: Memory = JSON.parse(parsedChunk.output);
+                const updatedMemory: Memory = JSON.parse(toolOutput);
                 setAction({ type: 'update', title: 'Memory Updated', content: `Updated memory: ${updatedMemory.content}`, status: 'end' });
                 setToastNotification({
                   message: "Memory Revised",
@@ -116,7 +119,7 @@ export const useChat = (): UseChatReturn => {
                   )
                 );
               } else if (parsedChunk.tool_name === 'retrieve_memories') {
-                const retrievedMemories = JSON.parse(parsedChunk.output);
+                const retrievedMemories : Memory[] = JSON.parse(toolOutput);
                 setAction({ type: 'retrieve', title: 'Memories Retrieved', content: `Retrieved ${retrievedMemories.length} memories`, status: 'end' });
                 setToastNotification({
                   message: "Memories Retrieved",

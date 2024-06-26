@@ -85,11 +85,9 @@ export const useChat = (): UseChatReturn => {
             //   }
             // }
             if (parsedChunk.event === 'on_tool_end') {
-              console.log('parsedChunk:', parsedChunk, 'parsedChunk.type:', typeof parsedChunk);
               const toolOutput = JSON.parse(parsedChunk.output);
               if (parsedChunk.tool_name === 'create_memory') {
                 const newMemory:Memory = JSON.parse(toolOutput);
-                console.log("newMemory:", newMemory, "newMemory.type:", typeof newMemory, "newMemory.content:", newMemory.content)
                 setAction({ type: 'create', title: 'Memory Created', content: `Created memory: ${newMemory.content}`, status: 'end' });
                 setToastNotification({
                   message: "Memory Remembered",

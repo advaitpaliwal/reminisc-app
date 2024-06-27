@@ -245,16 +245,6 @@ export function ApiKeysTable() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          <DropdownMenuItem
-                            onClick={() => handleCopy(key.secret_key)}
-                          >
-                            {copiedKey === key.secret_key ? (
-                              <Check className="mr-2 size-4" />
-                            ) : (
-                              <Copy className="mr-2 size-4" />
-                            )}
-                            {copiedKey === key.secret_key ? "Copied" : "Copy"}
-                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleEdit(key)}>
                             <Edit className="mr-2 size-4" />
                             Edit Name

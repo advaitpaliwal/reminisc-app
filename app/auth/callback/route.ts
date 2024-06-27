@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  console.log("Callback Redirecting to", `${origin}/protected`);
+  console.log("Callback Redirecting to", `${origin}/playground`);
   // URL to redirect to after sign up process completes
-  return NextResponse.redirect(`${origin}/protected`);
+  return NextResponse.redirect(`${origin}/playground`);
 }

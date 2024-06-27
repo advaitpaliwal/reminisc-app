@@ -20,7 +20,7 @@ interface ChatStore {
   resetToDefaults: () => void;
 }
 
-const DEFAULT_SYSTEM_PROMPT = "You are Reminisc, a super friendly AI assistant, excited to meet a new person.";
+const DEFAULT_SYSTEM_PROMPT = "You are Reminisc, a friendly AI assistant. Ask questions to get to know the user better.";
 
 export const useChatStore = create<ChatStore>()(
   persist(

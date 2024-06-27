@@ -63,10 +63,10 @@ export async function POST(req: Request) {
   };
 
   try {
-    const response = await fetch(`${apiUrl}/create`, {
+    const response = await fetch(`${apiUrl}/`, {
       method: 'POST',
       headers: headers,
-      body: JSON.stringify({ email, name, user_id: userId }),
+      body: JSON.stringify({ email, name, owner_id: userId }),
     });
 
     if (response.status === 403) {
@@ -104,7 +104,7 @@ export async function PUT(req: Request) {
   };
 
   try {
-    const response = await fetch(`${apiUrl}/update`, {
+    const response = await fetch(`${apiUrl}/`, {
       method: 'PUT',
       headers: headers,
       body: JSON.stringify({ api_key_id: apiKeyId, name }),
@@ -145,7 +145,7 @@ export async function DELETE(req: Request) {
   };
 
   try {
-    const response = await fetch(`${apiUrl}/delete/${apiKeyId}`, {
+    const response = await fetch(`${apiUrl}/${apiKeyId}`, {
       method: 'DELETE',
       headers: headers,
     });

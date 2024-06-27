@@ -50,25 +50,37 @@ export function SignupUserAuthForm({
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-4">
           <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="first-name">First name</Label>
+            <div>
+              <Label htmlFor="first-name" className="block mb-2">
+                First name
+              </Label>
               <Input
                 id="first-name"
                 placeholder="Advait"
                 required
                 {...register("firstName")}
               />
-              {errors.firstName && <span>{errors.firstName.message}</span>}
+              {errors.firstName && (
+                <span className="text-sm text-red-500 mt-1">
+                  {errors.firstName.message}
+                </span>
+              )}
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="last-name">Last name</Label>
+            <div>
+              <Label htmlFor="last-name" className="block mb-2">
+                Last name
+              </Label>
               <Input
                 id="last-name"
                 placeholder="Paliwal"
                 required
                 {...register("lastName")}
               />
-              {errors.lastName && <span>{errors.lastName.message}</span>}
+              {errors.lastName && (
+                <span className="text-sm text-red-500 mt-1">
+                  {errors.lastName.message}
+                </span>
+              )}
             </div>
           </div>
           <div className="grid gap-2">
@@ -80,16 +92,30 @@ export function SignupUserAuthForm({
               required
               {...register("email")}
             />
-            {errors.email && <span>{errors.email.message}</span>}
+            {errors.email && (
+              <span className="text-sm text-red-500">
+                {errors.email.message}
+              </span>
+            )}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" {...register("password")} />
-            {errors.password && <span>{errors.password.message}</span>}
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              required
+              {...register("password")}
+            />
+            {errors.password && (
+              <span className="text-sm text-red-500">
+                {errors.password.message}
+              </span>
+            )}
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
-              <Loader className="animate-spin" />
+              <Loader className="animate-spin mr-2" />
             ) : (
               "Create an account"
             )}

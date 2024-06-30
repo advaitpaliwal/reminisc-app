@@ -211,7 +211,7 @@ export function ApiKeysTable() {
           </Dialog>
         </div>
       </CardHeader>
-      {apiKeys.length > 0 && (
+      {
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
@@ -262,7 +262,7 @@ export function ApiKeysTable() {
             </Table>
           </div>
         </CardContent>
-      )}
+      }
 
       {showSaveKeyDialog && newKey && (
         <Dialog open={showSaveKeyDialog} onOpenChange={setShowSaveKeyDialog}>

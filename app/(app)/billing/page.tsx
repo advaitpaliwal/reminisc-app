@@ -9,16 +9,6 @@ import {
   CardHeader,
   CardFooter,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
@@ -87,19 +77,9 @@ const pricingTiers: PricingTier[] = [
 
 export function BillingPage() {
   const [isMonthly, setIsMonthly] = useState(true);
-  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
-  const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null);
 
   const handleUpgrade = (tier: PricingTier) => {
-    setSelectedTier(tier);
-    setShowUpgradeDialog(true);
-  };
-
-  const confirmUpgrade = () => {
-    if (selectedTier) {
-      toast.success(`Upgraded to ${selectedTier.name} plan successfully.`);
-      setShowUpgradeDialog(false);
-    }
+    toast.success(`Upgraded to ${tier.name} plan successfully.`);
   };
 
   return (
@@ -158,51 +138,6 @@ export function BillingPage() {
           </Card>
         ))}
       </div>
-
-      <Dialog open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Upgrade to {selectedTier?.name}</DialogTitle>
-            <DialogDescription>
-              You are about to upgrade to the {selectedTier?.name} plan. This
-              will be billed {isMonthly ? "monthly" : "yearly"}.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="card-number" className="text-right">
-                Card Number
-              </Label>
-              <Input
-                id="card-number"
-                placeholder="1234 5678 9012 3456"
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="expiry-date" className="text-right">
-                Expiry Date
-              </Label>
-              <Input
-                id="expiry-date"
-                placeholder="MM/YY"
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="cvv" className="text-right">
-                CVV
-              </Label>
-              <Input id="cvv" placeholder="123" className="col-span-3" />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="button" onClick={confirmUpgrade}>
-              Confirm Upgrade
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

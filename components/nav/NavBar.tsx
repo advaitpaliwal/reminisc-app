@@ -8,7 +8,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { SquareTerminal, Book, KeyRoundIcon } from "lucide-react";
+import { SquareTerminal, Book, KeyRoundIcon, WalletIcon } from "lucide-react";
 import ReminiscLogo from "../header/logo";
 import React from "react";
 import { cn } from "@/lib/utils";
@@ -44,7 +44,7 @@ export const NavBar: React.FC<NavBarProps> = ({ className }) => {
           </Button>
         </div>
         <nav className="grid gap-1 p-2">
-          {Array.from({ length: 4 }).map((_, index) => (
+          {Array.from({ length: 5 }).map((_, index) => (
             <Button
               key={index}
               variant="ghost"
@@ -120,7 +120,26 @@ export const NavBar: React.FC<NavBarProps> = ({ className }) => {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href="https://docs.reminisc.ai/" target="_blank">
+            <Link href="/billing">
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn("rounded-lg", {
+                  "bg-muted": isActive("/billing"),
+                })}
+                aria-label="Billing"
+              >
+                <WalletIcon className="size-5" />
+              </Button>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right" sideOffset={5}>
+            Billing
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link href="https://docs.reminisc.ai/">
               <Button
                 variant="ghost"
                 size="icon"

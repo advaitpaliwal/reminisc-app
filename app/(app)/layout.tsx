@@ -21,6 +21,9 @@ const Layout = ({ children }: LayoutProps) => {
       case "/api":
         setTitle("API Keys");
         break;
+      case "/billing":
+        setTitle("Billing");
+        break;
       default:
         setTitle("Dashboard");
     }

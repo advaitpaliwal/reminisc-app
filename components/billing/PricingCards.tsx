@@ -109,9 +109,18 @@ export function PricingCards() {
           >
             <CardHeader>
               <h3 className="text-lg font-semibold">{tier.name}</h3>
-              <p className="text-2xl font-bold">
-                {isMonthly ? tier.monthlyPrice : tier.yearlyPrice}
-              </p>
+              <div className="flex flex-col">
+                <p className="text-2xl font-bold">
+                  {isMonthly ? tier.monthlyPrice : tier.yearlyPrice}
+                </p>
+                <p className="text-sm text-muted-foreground my-2">
+                  {tier.name === "Enterprise"
+                    ? "\0"
+                    : isMonthly
+                    ? "billed monthly"
+                    : "billed annually (20% off)"}
+                </p>
+              </div>
               <p className="text-sm text-muted-foreground">
                 {tier.description}
               </p>

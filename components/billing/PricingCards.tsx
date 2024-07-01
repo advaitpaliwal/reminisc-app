@@ -118,7 +118,7 @@ export function PricingCards() {
                     ? "\0"
                     : isMonthly
                     ? "billed monthly"
-                    : "billed annually (20% off)"}
+                    : "billed yearly (20% off)"}
                 </p>
               </div>
               <p className="text-sm text-muted-foreground">
